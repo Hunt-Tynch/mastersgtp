@@ -1,36 +1,28 @@
-package com.masters.hga.entity;
+package com.masters.hga.dto;
 
 import com.masters.hga.entity.enums.StakeType;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Dog DAO. Each dog has a unique identifier (i.e number), and several other
+ * Dog DTO. Each dog has a unique identifier (i.e number), and several other
  * assoicated values:
  * name, score, sire, dam, and kennel. Dogs share a many to one relationship
  * with the kennel,
  * and this will be used for retrieving dogs by kennel if necessary.
  */
-@Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Dog {
+public class DogDTO {
 
     /** Hunt that the dog is in */
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Hunt hunt;
+    private HuntDTO hunt;
     /** Number assigned to dog for hunt. (1-999) */
-    @Id
     private Integer number;
     /** Stake (All-Age or Derby) based off number */
     private StakeType stake;
@@ -47,8 +39,7 @@ public class Dog {
     /** Dam of the dog */
     private String dam;
     /** Kennel the dog belongs to. */
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Kennel kennel;
+    private KennelDTO kennel;
 
     /**
      * Initial constructor for a Dog, assigns a score of 0 and assigns other values
@@ -60,8 +51,8 @@ public class Dog {
      * @param dam    Dam of the dog
      * @param kennel Kennel of the dog
      */
-    public Dog(Hunt hunt, Integer number, StakeType stake, String name, String regNumber, String sire, String dam,
-            Kennel kennel) {
+    public DogDTO(HuntDTO hunt, Integer number, StakeType stake, String name, String regNumber, String sire, String dam,
+            KennelDTO kennel) {
         this(hunt, number, stake, name, regNumber, 0, 0, sire, dam, kennel);
     }
 

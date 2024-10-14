@@ -28,7 +28,7 @@ public class Scratch {
     /** Unique id */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     /** Dog that is scratched */
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Dog dog;

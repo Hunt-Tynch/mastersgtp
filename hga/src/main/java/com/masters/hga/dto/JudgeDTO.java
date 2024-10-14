@@ -20,7 +20,7 @@ import lombok.Setter;
 public class JudgeDTO {
 
     /** Unique id for judge per hunt */
-    private Integer id;
+    private Long id;
     /** Judge's memberPIN */
     private String memberPIN;
     /** Judge's name */
@@ -30,7 +30,7 @@ public class JudgeDTO {
     /** List of scratches made by Judge */
     private List<ScratchDTO> scratches;
 
-    public JudgeDTO(Integer id, String memberPIN, String name) {
+    public JudgeDTO(Long id, String memberPIN, String name) {
         this(id, memberPIN, name, new ArrayList<ScoreDTO>(), new ArrayList<ScratchDTO>());
     }
 

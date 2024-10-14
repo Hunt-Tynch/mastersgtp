@@ -19,7 +19,7 @@ import lombok.Setter;
 public class ScratchDTO {
 
     /** Unique id */
-    private Integer id;
+    private Long id;
     /** Dog that is scratched */
     private Dog dog;
     /** Reason for being scratched */

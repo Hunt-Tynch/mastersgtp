@@ -27,7 +27,7 @@ public class Judge {
 
     /** Unique id for judge per hunt */
     @Id
-    private Integer id;
+    private Long id;
     /** Judge's memberPIN */
     private String memberPIN;
     /** Judge's name */
@@ -39,7 +39,7 @@ public class Judge {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Scratch> scratches;
 
-    public Judge(Integer id, String memberPIN, String name) {
+    public Judge(Long id, String memberPIN, String name) {
         this(id, memberPIN, name, new ArrayList<Score>(), new ArrayList<Scratch>());
     }
 

@@ -16,7 +16,7 @@ import lombok.Setter;
 public class KennelDTO {
 
     /** Unique Id for Kennel */
-    private Integer id;
+    private Long id;
     /** Owners name for Kennel */
     private String owner;
     /** Owners town for Kennel */

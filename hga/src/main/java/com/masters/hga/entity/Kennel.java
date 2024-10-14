@@ -23,7 +23,7 @@ public class Kennel {
     /** Unique Id for Kennel */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     /** Owners name for Kennel */
     private String owner;
     /** Owners town for Kennel */

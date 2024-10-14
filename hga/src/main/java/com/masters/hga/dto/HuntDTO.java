@@ -15,7 +15,7 @@ import lombok.Setter;
 public class HuntDTO {
 
     /** Unique Id for each Hunt */
-    private Integer id;
+    private Long id;
     /** Name of the Hunt */
     private String name;
     /** Dates for the Hunt */

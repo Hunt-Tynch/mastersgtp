@@ -31,7 +31,7 @@ public class Dog {
     private Hunt hunt;
     /** Number assigned to dog for hunt. (1-999) */
     @Id
-    private Integer number;
+    private Long number;
     /** Stake (All-Age or Derby) based off number */
     private StakeType stake;
     /** Name of the dog. */
@@ -40,8 +40,10 @@ public class Dog {
     private String regNumber;
     /** Speed and Drive Score for the hunt. */
     private Integer sdscore;
-    /** Speed and Drive Score for the hunt. */
+    /** Endurance Score for the hunt. */
     private Integer escore;
+    /** Total Score for the hunt */
+    private Integer total;
     /** Sire of the dog. */
     private String sire;
     /** Dam of the dog */
@@ -60,9 +62,9 @@ public class Dog {
      * @param dam    Dam of the dog
      * @param kennel Kennel of the dog
      */
-    public Dog(Hunt hunt, Integer number, StakeType stake, String name, String regNumber, String sire, String dam,
+    public Dog(Hunt hunt, Long number, StakeType stake, String name, String regNumber, String sire, String dam,
             Kennel kennel) {
-        this(hunt, number, stake, name, regNumber, 0, 0, sire, dam, kennel);
+        this(hunt, number, stake, name, regNumber, 0, 0, 0, sire, dam, kennel);
     }
 
 }

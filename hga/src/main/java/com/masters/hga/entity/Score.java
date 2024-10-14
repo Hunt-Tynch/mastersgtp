@@ -28,7 +28,7 @@ public class Score {
     /** Unique ID for scores */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     /** Time of the score */
     private String time;
     /** List of Dogs involved */

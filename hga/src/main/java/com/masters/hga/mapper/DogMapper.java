@@ -1,5 +1,7 @@
 package com.masters.hga.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -15,4 +17,7 @@ public interface DogMapper {
 
     Dog toEntity(DogDTO dto);
 
+    List<DogDTO> toDtoList(List<Dog> entities);
+
+    List<Dog> toEntityList(List<DogDTO> dtos);
 }

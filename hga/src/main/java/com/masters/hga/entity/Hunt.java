@@ -23,7 +23,7 @@ public class Hunt {
     /** Unique Id for each Hunt */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     /** Name of the Hunt */
     private String name;
     /** Dates for the Hunt */

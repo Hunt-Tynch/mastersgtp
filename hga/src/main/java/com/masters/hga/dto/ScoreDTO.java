@@ -20,7 +20,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ScoreDTO {
     /** Unique ID for scores */
-    private Integer id;
+    private Long id;
     /** Time of the score */
     private String time;
     /** List of Dogs involved */

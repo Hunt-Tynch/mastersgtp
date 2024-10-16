@@ -2,7 +2,6 @@ package com.masters.hga.entity;
 
 import com.masters.hga.entity.enums.ScratchType;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

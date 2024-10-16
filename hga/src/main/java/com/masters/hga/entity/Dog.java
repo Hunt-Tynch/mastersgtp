@@ -2,7 +2,6 @@ package com.masters.hga.entity;
 
 import com.masters.hga.entity.enums.StakeType;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;

@@ -16,43 +16,43 @@ import com.masters.hga.repositories.ScratchRepository;
 @Service
 public class HuntService {
 
-    @Autowired
-    private HuntRepository huntRepository;
+	@Autowired
+	private HuntRepository huntRepository;
 
-    @Autowired
-    private DogRepository dogRepository;
+	@Autowired
+	private DogRepository dogRepository;
 
-    @Autowired
-    private KennelRepository kennelRepository;
+	@Autowired
+	private KennelRepository kennelRepository;
 
-    @Autowired
-    private JudgeRepository judgeRepository;
+	@Autowired
+	private JudgeRepository judgeRepository;
 
-    @Autowired
-    private ScoreRepository scoreRepository;
+	@Autowired
+	private ScoreRepository scoreRepository;
 
-    @Autowired
-    private ScratchRepository scratchRepository;
+	@Autowired
+	private ScratchRepository scratchRepository;
 
-    public HuntDTO newHunt(HuntDTO dto) {
-        huntRepository.deleteAll();
-        dogRepository.deleteAll();
-        kennelRepository.deleteAll();
-        judgeRepository.deleteAll();
-        scoreRepository.deleteAll();
-        scratchRepository.deleteAll();
-        Hunt hunt = HuntMapper.INSTANCE.toEntity(dto);
-        Hunt savedHunt = huntRepository.save(hunt);
-        return HuntMapper.INSTANCE.toDto(savedHunt);
-    }
+	public HuntDTO newHunt(final HuntDTO dto) {
+		judgeRepository.deleteAll();
+		scoreRepository.deleteAll();
+		scratchRepository.deleteAll();
+		dogRepository.deleteAll();
+		huntRepository.deleteAll();
+		kennelRepository.deleteAll();
+		final Hunt hunt = HuntMapper.INSTANCE.toEntity(dto);
+		final Hunt savedHunt = huntRepository.save(hunt);
+		return HuntMapper.INSTANCE.toDto(savedHunt);
+	}
 
-    public HuntDTO updateHunt(HuntDTO dto) {
-        Hunt hunt = huntRepository.findById(dto.getId()).get();
-        hunt.setName(dto.getName());
-        hunt.setInterval(dto.getInterval());
-        hunt.setDate(dto.getDate());
-        Hunt savedHunt = huntRepository.save(hunt);
-        return HuntMapper.INSTANCE.toDto(savedHunt);
-    }
+	public HuntDTO updateHunt(final HuntDTO dto) {
+		final Hunt hunt = huntRepository.findById(dto.getId()).get();
+		hunt.setName(dto.getName());
+		hunt.setTimeInterval(dto.getTimeInterval());
+		hunt.setDate(dto.getDate());
+		final Hunt savedHunt = huntRepository.save(hunt);
+		return HuntMapper.INSTANCE.toDto(savedHunt);
+	}
 
 }

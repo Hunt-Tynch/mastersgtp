@@ -8,9 +8,9 @@ import com.masters.hga.entity.Hunt;
 
 @Mapper
 public interface HuntMapper {
-    HuntMapper INSTANCE = Mappers.getMapper(HuntMapper.class);
+	HuntMapper INSTANCE = Mappers.getMapper(HuntMapper.class);
 
-    Hunt toEntity(HuntDTO dto);
+	Hunt toEntity(HuntDTO dto);
 
-    HuntDTO toDto(Hunt entity);
+	HuntDTO toDto(Hunt entity);
 }

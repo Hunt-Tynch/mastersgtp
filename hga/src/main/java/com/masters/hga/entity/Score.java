@@ -32,7 +32,7 @@ public class Score {
     /** Time of the score */
     private String time;
     /** List of Dogs involved */
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Dog> dogs;
 
     /**

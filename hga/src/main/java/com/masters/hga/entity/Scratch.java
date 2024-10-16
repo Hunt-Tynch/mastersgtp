@@ -30,7 +30,7 @@ public class Scratch {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     /** Dog that is scratched */
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER)
     private Dog dog;
     /** Reason for being scratched */
     private ScratchType reason;

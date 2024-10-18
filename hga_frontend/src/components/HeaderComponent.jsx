@@ -9,11 +9,8 @@ const HeaderComponent = () => {
                 <a className="navbar-brand" href="http://localhost:3000">Masters</a>
                 <div className="collapse navbar-collapse" id="navbarNav">
                   <ul className="navbar-nav">
-                  <li className="nav-item">
-                      <NavLink className="nav-link" to="/recipes">Hunt</NavLink>
-                    </li>
                     <li className="nav-item">
-                      <NavLink className="nav-link" to="/recipes">Dogs</NavLink>
+                      <NavLink className="nav-link" to="/dogs">Dogs</NavLink>
                     </li>
                   </ul>
                 </div>

@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-HgaApplication<hga>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.masters.hga.HgaApplication",
+            "projectName": "hga",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

@@ -2,6 +2,7 @@ package com.masters.hga.services;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import com.masters.hga.dto.HuntDTO;
 import com.masters.hga.entity.Hunt;
 import com.masters.hga.mapper.HuntMapper;
 import com.masters.hga.repositories.HuntRepository;
@@ -60,5 +62,15 @@ public class HuntServiceTest {
                 () -> assertEquals("Update Hunt", updatedHunt.getName()),
                 () -> assertEquals("Today", updatedHunt.getDate()),
                 () -> assertEquals(5, updatedHunt.getTimeInterval()));
+    }
+
+    @Test
+    void getHunt() {
+        HuntDTO hunt = new HuntDTO("Test Hunt", "10-15-2024", 10);
+        assertNull(huntService.getHunt());
+        Hunt savedHunt = HuntMapper.INSTANCE.toEntity(huntService.newHunt(hunt));
+        Hunt retrievedHunt = HuntMapper.INSTANCE.toEntity(huntService.getHunt());
+
+        assertAll("Hunt Contents", () -> assertEquals(retrievedHunt.getId(), savedHunt.getId()));
     }
 }

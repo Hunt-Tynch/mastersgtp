@@ -2,6 +2,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import HeaderComponent from './components/HeaderComponent';
 import MainComponent from './components/MainComponent';
+import NewHuntComponent from './components/NewHuntComponent';
+import UpdateHuntComponent from './components/UpdateHuntComponent';
+
 
 function App() {
   return (
@@ -12,6 +15,8 @@ function App() {
           <HeaderComponent />
           <Routes>
             <Route path='/' element = { <MainComponent /> }></Route>
+            <Route path='/create-hunt' element = {<NewHuntComponent/>}></Route>
+            <Route path='/update-hunt' element = {<UpdateHuntComponent/>}></Route>
           </Routes>
         </div>
       </div>

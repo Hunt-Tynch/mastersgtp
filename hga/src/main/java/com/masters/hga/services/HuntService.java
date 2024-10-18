@@ -1,5 +1,7 @@
 package com.masters.hga.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +55,11 @@ public class HuntService {
 		hunt.setDate(dto.getDate());
 		final Hunt savedHunt = huntRepository.save(hunt);
 		return HuntMapper.INSTANCE.toDto(savedHunt);
+	}
+
+	public HuntDTO getHunt() {
+		List<Hunt> hunt = huntRepository.findAll();
+		return hunt.isEmpty() ? null : HuntMapper.INSTANCE.toDto(hunt.getFirst());
 	}
 
 }

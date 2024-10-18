@@ -10,7 +10,7 @@ function App() {
   return (
     <>
     <BrowserRouter>
-      <div className="d-flex min-vh-100 flex-column justify-content-between">
+      <div className="d-flex min-vh-100 flex-column justify-content-between" style={{ background: '#999999'}}>
         <div>
           <HeaderComponent />
           <Routes>

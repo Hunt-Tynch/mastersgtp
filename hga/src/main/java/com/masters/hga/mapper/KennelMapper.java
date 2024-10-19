@@ -1,5 +1,7 @@
 package com.masters.hga.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -14,5 +16,9 @@ public interface KennelMapper {
     Kennel toEntity(KennelDTO dto);
 
     KennelDTO toDto(Kennel entity);
+
+    List<Kennel> toEntityList(List<KennelDTO> dtos);
+
+    List<KennelDTO> toDtoList(List<Kennel> entities);
 
 }

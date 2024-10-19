@@ -1,17 +1,16 @@
 package com.masters.hga.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.masters.hga.dto.DogDTO;
-import com.masters.hga.dto.KennelDTO;
 import com.masters.hga.entity.Dog;
 import com.masters.hga.entity.Kennel;
 import com.masters.hga.entity.enums.StakeType;
 import com.masters.hga.mapper.DogMapper;
-import com.masters.hga.mapper.KennelMapper;
 import com.masters.hga.repositories.DogRepository;
 import com.masters.hga.repositories.KennelRepository;
 
@@ -30,13 +29,25 @@ public class DogService {
         return DogMapper.INSTANCE.toDTO(savedDog);
     }
 
+    public List<DogDTO> createDogs(List<DogDTO> dtos) {
+        List<DogDTO> newList = new ArrayList<DogDTO>();
+        for (DogDTO dto : dtos) {
+            newList.add(createDog(dto));
+        }
+        return newList;
+    }
+
+    public List<DogDTO> getAllDogs() {
+        return DogMapper.INSTANCE.toDtoList(dogRepository.findAll());
+    }
+
     public List<DogDTO> getDogsByStake(StakeType stake) {
         List<Dog> dogs = dogRepository.findByStakeOrderByTotalDesc(stake);
         return DogMapper.INSTANCE.toDtoList(dogs);
     }
 
-    public List<DogDTO> getDogsByKennel(KennelDTO kennelDto) {
-        Kennel kennel = KennelMapper.INSTANCE.toEntity(kennelDto);
+    public List<DogDTO> getDogsByKennel(Long kennelId) {
+        Kennel kennel = kennelRepository.findById(kennelId).get();
         return DogMapper.INSTANCE.toDtoList(dogRepository.findByKennelOrderByTotalDesc(kennel));
     }
 

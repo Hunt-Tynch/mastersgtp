@@ -1,5 +1,7 @@
 package com.masters.hga.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -15,4 +17,7 @@ public interface ScratchMapper {
 
     ScratchDTO toDto(Scratch entity);
 
+    List<Scratch> toEntityList(List<ScratchDTO> dtos);
+
+    List<ScratchDTO> toDtoList(List<Scratch> entities);
 }

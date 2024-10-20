@@ -14,4 +14,8 @@ public interface DogRepository extends JpaRepository<Dog, Long> {
 
     List<Dog> findByKennelOrderByTotalDesc(Kennel kennel);
 
+    List<Dog> findByStake(StakeType stake);
+
+    List<Dog> findByKennel(Kennel kennel);
+
 }

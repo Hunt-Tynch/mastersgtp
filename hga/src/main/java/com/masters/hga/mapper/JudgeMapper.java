@@ -1,5 +1,7 @@
 package com.masters.hga.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -14,4 +16,8 @@ public interface JudgeMapper {
     Judge toEntity(JudgeDTO dto);
 
     JudgeDTO toDto(Judge entity);
+
+    List<JudgeDTO> toDtoList(List<Judge> entities);
+
+    List<Judge> toEntityList(List<JudgeDTO> dtos);
 }

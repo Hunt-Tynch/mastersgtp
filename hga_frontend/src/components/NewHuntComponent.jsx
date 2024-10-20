@@ -49,24 +49,25 @@ const NewHuntComponent = () => {
                     </thead>
                     <tbody>
                         <tr>
-                            <td className="medium-text" style={{ width: '300px' }}>
+                            <td style={{ width: '300px' }}>
                                 <input
                                     className="form-control"
                                     value={hunt.name}
                                     onChange={e => setHunt(prev => ({ ...prev, name: e.target.value }))}
                                 />
                             </td>
-                            <td className="medium-text" style={{ width: '300px' }}>
+                            <td style={{ width: '300px' }}>
                                 <input
                                     className="form-control"
                                     value={hunt.date}
                                     onChange={e => setHunt(prev => ({ ...prev, date: e.target.value }))}
                                 />
                             </td>
-                            <td className="medium-text" style={{ width: '300px' }}>
+                            <td style={{ width: '300px' }}>
                                 <input
                                     className="form-control"
-                                    value={hunt.timeInterval}
+                                    type="number"
+                                    value={hunt.timeInterval === 0 ? null : hunt.timeInterval}
                                     onChange={e => setHunt(prev => ({ ...prev, timeInterval: Number(e.target.value) }))}
                                 />
                             </td>

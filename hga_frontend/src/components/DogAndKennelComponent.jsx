@@ -17,6 +17,7 @@ const DogAndKennelComponent = () => {
     const [stakeOptions] = useState(["ALL_AGE", "DERBY"]);
     const [showMessage, setShowMessage] = useState(false)
     const [selectedStake, setSelectedStake] = useState(null)
+    const [badEntry, setBadEntry] = useState(null)
 
     useEffect(() => {
         listHunt().then(ret => {
@@ -60,7 +61,11 @@ const DogAndKennelComponent = () => {
             })
             setSelectedKennel({ id: null })
             if (selectedStake) {
-                getStake(selectedStake)
+                if (selectedStake === 'ALL') {
+                    getAll()
+                } else {
+                    getStake(selectedStake)
+                }
             }
         }).catch(err => {
             console.log(err);
@@ -100,15 +105,31 @@ const DogAndKennelComponent = () => {
         }));
 
         postDogs(dogsToAdd).then(() => {
+            setBadEntry(null)
+            setDogEntries([]);
             getDogsByKennel(selectedKennel.id).then(ret => {
                 setDogs(ret.data);
             }).catch(err => {
                 console.log(err);
             });
-            setDogEntries([]); // Clear the table after adding
         }).catch(err => {
+            const entries = err.response.data.map(dog => ({
+                number: dog.number,
+                stake: dog.stake,
+                name: dog.name,
+                regNumber: dog.regNumber,
+                sire: dog.sire,
+                dam: dog.dam,
+            }))
+            setDogEntries(entries)
+            setBadEntry(entries[0].number)
             console.log(err);
-        });
+            getDogsByKennel(selectedKennel.id).then(ret => {
+                setDogs(ret.data);
+            }).catch(err => {
+                console.log(err);
+            });
+        })
     };
 
     const addDogEntry = () => {
@@ -146,11 +167,17 @@ const DogAndKennelComponent = () => {
 
     const removeDog = (id) => {
         deleteDog(id).then(() => {
-            getDogsByKennel(selectedKennel.id).then(ret => {
-                setDogs(ret.data);
-            }).catch(err => {
-                console.log(err);
-            });
+            if (selectedKennel.id) {
+                getDogsByKennel(selectedKennel.id).then(ret => {
+                    setDogs(ret.data);
+                }).catch(err => {
+                    console.log(err);
+                });
+            } else if (selectedStake === 'ALL') {
+                getAll()
+            } else {
+                getStake(selectedStake)
+            }
         }).catch(err => {
             console.log(err)
         })
@@ -181,12 +208,14 @@ const DogAndKennelComponent = () => {
             <div className="kennel-section" style={{ flex: 1, marginRight: '20px', background: '#c0c0c0', border: '3px solid black', borderRadius: '5px', padding: '10px', maxWidth: '400px' }}>
                 <div className="text-center">
                     <div className="large-text">Kennels</div>
-                    <input
-                        type="text"
-                        placeholder="Search by Name"
-                        onChange={e => setSearchTerm(e.target.value)}
-                        style={{ margin: '5px 0', width: '75%' }}
-                    />
+                    <div style={{border: '3px solid black'}}>
+                        <input
+                            type="text"
+                            placeholder="Search Kennels by Name"
+                            onChange={e => setSearchTerm(e.target.value)}
+                            style={{ margin: '5px 0', width: '75%' }}
+                        />
+                    </div>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <input type="text" placeholder="Name" onChange={e => setName(e.target.value)} style={{ margin: '5px 0' }} />
                         <input type="text" placeholder="Town" onChange={e => setTown(e.target.value)} style={{ margin: '5px 0' }} />
@@ -216,11 +245,11 @@ const DogAndKennelComponent = () => {
             </div>
 
             {selectedKennel.id && (
-                <div className="dog-section" style={{ flex: 2, background: '#c0c0c0', border: '3px solid black', borderRadius: '5px', padding: '10px', minWidth: '1250px' }}>
+                <div className="dog-section" style={{ flex: 2, background: '#c0c0c0', border: '3px solid black', borderRadius: '5px', padding: '10px', minWidth: '1250px', overflowY: 'auto', maxHeight: '800px' }}>
                     <div className="text-center">
                         <h4 className="medium-text">Dogs for {selectedKennel.owner}</h4>
                         <button className="btn btn-secondary mb-2 mx-2" onClick={addDogEntry}>Add Dog Entry</button><button className="circle-button" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>i</button>
-                        { showMessage && <div style={{ color: 'blue', marginBottom: '10px' }}>Add Dog Entry fills in the previous stake, sire, and dam of the last entry.</div>}
+                        { showMessage && <div style={{ color: 'blue', marginBottom: '10px' }}>Click Add Dog Entry after filling in an entry for prefill.</div>}
                         <div style={{ overflowX: 'auto' }}>
                             <table className="table table-striped table-bordered">
                                 <thead>
@@ -238,7 +267,7 @@ const DogAndKennelComponent = () => {
                                     {dogEntries.map((dog, index) => (
                                         <tr key={index}>
                                             <td><button className="btn btn-danger" onClick={() => removeDogEntry(index)}>-</button></td>
-                                            <td><input type="text" value={dog.number} onChange={e => handleDogEntryChange(index, 'number', e.target.value)} /></td>
+                                            <td style={{ border: badEntry && dog.number === badEntry ? '3px solid red' : null }}><input type="text" value={dog.number} onChange={e => handleDogEntryChange(index, 'number', e.target.value)} /></td>
                                             <td>
                                                 <select 
                                                     value={dog.stake} 
@@ -250,7 +279,8 @@ const DogAndKennelComponent = () => {
                                                         </option>
                                                     ))}
                                                 </select>
-                                            </td>                                            <td><input type="text" value={dog.name} onChange={e => handleDogEntryChange(index, 'name', e.target.value)} /></td>
+                                            </td>
+                                            <td><input type="text" value={dog.name} onChange={e => handleDogEntryChange(index, 'name', e.target.value)} /></td>
                                             <td><input type="text" value={dog.regNumber} onChange={e => handleDogEntryChange(index, 'regNumber', e.target.value)} /></td>
                                             <td><input type="text" value={dog.sire} onChange={e => handleDogEntryChange(index, 'sire', e.target.value)} /></td>
                                             <td><input type="text" value={dog.dam} onChange={e => handleDogEntryChange(index, 'dam', e.target.value)} /></td>
@@ -259,7 +289,7 @@ const DogAndKennelComponent = () => {
                                 </tbody>
                             </table>
                         </div>
-                        <button className="btn btn-primary mt-2" onClick={addDogs}>Submit Dogs</button>
+                        <button className="btn btn-secondary mt-2" onClick={addDogs}>Submit Dogs</button>
                         <div className="dogs-list mt-3">
                             <table className="table table-striped table-bordered">
                                 <thead>
@@ -298,7 +328,7 @@ const DogAndKennelComponent = () => {
                 </div>
             )}
             {selectedStake && !selectedKennel.id && (
-                <div className="dog-section" style={{ flex: 2, background: '#c0c0c0', border: '3px solid black', borderRadius: '5px', padding: '10px', minWidth: '1250px' }}>
+                <div className="dog-section" style={{ flex: 2, background: '#c0c0c0', border: '3px solid black', borderRadius: '5px', padding: '10px', minWidth: '1250px', overflowY: 'auto', maxHeight: '800px' }}>
                     <div className="text-center">
                         <h4 className="medium-text">{selectedStake} Dogs</h4>
                         <div className="dogs-list mt-3">

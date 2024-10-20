@@ -1,5 +1,7 @@
 package com.masters.hga.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -14,5 +16,9 @@ public interface ScoreMapper {
     Score toEntity(ScoreDTO dto);
 
     ScoreDTO toDto(Score entity);
+
+    List<Score> toEntityList(List<ScoreDTO> dtos);
+
+    List<ScoreDTO> toDtoList(List<Score> entities);
 
 }

@@ -2,12 +2,13 @@ package com.masters.hga.entity;
 
 import com.masters.hga.entity.enums.ScratchType;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +30,7 @@ public class Scratch {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     /** Dog that is scratched */
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private Dog dog;
     /** Reason for being scratched */
     private ScratchType reason;

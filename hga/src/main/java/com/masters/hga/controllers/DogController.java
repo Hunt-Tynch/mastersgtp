@@ -1,8 +1,10 @@
 package com.masters.hga.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,8 +47,22 @@ public class DogController {
     }
 
     @PostMapping
-    public List<DogDTO> postDogs(@RequestBody List<DogDTO> dtos) {
-        return dogService.createDogs(dtos);
+    public ResponseEntity<List<DogDTO>> postDogs(@RequestBody List<DogDTO> dtos) {
+        return createDogs(dtos);
+    }
+
+    private ResponseEntity<List<DogDTO>> createDogs(List<DogDTO> dtos) {
+        List<DogDTO> newList = new ArrayList<DogDTO>();
+        List<DogDTO> oldList = new ArrayList<DogDTO>(dtos);
+        for (DogDTO dto : dtos) {
+            if (dogService.dogExists(dto.getNumber())) {
+                return ResponseEntity.badRequest().body(oldList);
+            } else {
+                newList.add(dogService.createDog(dto));
+                oldList.remove(dto);
+            }
+        }
+        return ResponseEntity.ok(newList);
     }
 
     @DeleteMapping("{number}")

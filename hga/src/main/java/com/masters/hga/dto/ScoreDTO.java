@@ -1,9 +1,6 @@
 package com.masters.hga.dto;
 
-import java.util.List;
-
-import com.masters.hga.entity.Dog;
-
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,8 +20,16 @@ public class ScoreDTO {
     private Long id;
     /** Time of the score */
     private String time;
-    /** List of Dogs involved */
-    private List<Dog> dogs;
+    @OneToOne
+    private DogDTO firstDog;
+    @OneToOne
+    private DogDTO secondDog;
+    @OneToOne
+    private DogDTO thirdDog;
+    @OneToOne
+    private DogDTO fourthDog;
+    @OneToOne
+    private DogDTO fifthDog;
 
     /**
      * Initial constructor for a Score. Assigns a time and the list of dogs to add.
@@ -32,7 +37,21 @@ public class ScoreDTO {
      * @param time Time of the score
      * @param dogs List of dogs involved
      */
-    public ScoreDTO(String time, List<Dog> dogs) {
-        this(null, time, dogs);
+    public ScoreDTO(String time, DogDTO... dogs) {
+        this();
+        setTime(time);
+        switch (dogs.length) {
+            case 5:
+                setFifthDog(dogs[4]);
+            case 4:
+                setFourthDog(dogs[3]);
+            case 3:
+                setThirdDog(dogs[2]);
+            case 2:
+                setSecondDog(dogs[1]);
+            default:
+                setFirstDog(dogs[0]);
+                break;
+        }
     }
 }

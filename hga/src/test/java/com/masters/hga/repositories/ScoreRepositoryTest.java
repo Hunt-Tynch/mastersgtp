@@ -3,8 +3,6 @@ package com.masters.hga.repositories;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,29 +45,24 @@ public class ScoreRepositoryTest {
         dog5 = dogRepository.save(dog5);
 
         // Create and save the first score with dog1
-        List<Dog> dogs1 = List.of(dog1);
-        Score score1 = new Score("10:00", dogs1);
+        Score score1 = new Score("10:00", dog1);
         Score savedScore1 = scoreRepository.save(score1);
 
-        // Create and save the second score with dog1, dog2, and dog3
-        List<Dog> dogs2 = List.of(dog1, dog2, dog3); // Using the same dog1
-        Score score2 = new Score("10:30", dogs2);
-        Score savedScore2 = scoreRepository.save(score2); // This should be valid now
+        Score score2 = new Score("10:30", dog1, dog2, dog3);
+        Score savedScore2 = scoreRepository.save(score2);
 
-        // Create and save the third score with dog3, dog4, and dog5
-        List<Dog> dogs3 = List.of(dog3, dog4, dog5);
-        Score score3 = new Score("11:00", dogs3);
+        Score score3 = new Score("11:00", dog5, dog4, dog3);
         Score savedScore3 = scoreRepository.save(score3);
 
         // Assert results
         assertAll("Score Contents",
-                () -> assertEquals(scoreRepository.findByDogsNumber(1L).get(0).getId(), savedScore1.getId()),
-                () -> assertEquals(scoreRepository.findByDogsNumber(1L).get(1).getId(), savedScore2.getId()),
-                () -> assertEquals(scoreRepository.findByDogsNumber(2L).get(0).getId(), savedScore2.getId()),
-                () -> assertEquals(scoreRepository.findByDogsNumber(3L).get(0).getId(), savedScore2.getId()),
-                () -> assertEquals(scoreRepository.findByDogsNumber(3L).get(1).getId(), savedScore3.getId()),
-                () -> assertEquals(scoreRepository.findByDogsNumber(4L).get(0).getId(), savedScore3.getId()),
-                () -> assertEquals(scoreRepository.findByDogsNumber(5L).get(0).getId(), savedScore3.getId()));
+                () -> assertEquals(scoreRepository.findAllScoresByDogNumber(1L).get(0).getId(), savedScore1.getId()),
+                () -> assertEquals(scoreRepository.findAllScoresByDogNumber(1L).get(1).getId(), savedScore2.getId()),
+                () -> assertEquals(scoreRepository.findAllScoresByDogNumber(2L).get(0).getId(), savedScore2.getId()),
+                () -> assertEquals(scoreRepository.findAllScoresByDogNumber(3L).get(0).getId(), savedScore2.getId()),
+                () -> assertEquals(scoreRepository.findAllScoresByDogNumber(3L).get(1).getId(), savedScore3.getId()),
+                () -> assertEquals(scoreRepository.findAllScoresByDogNumber(4L).get(0).getId(), savedScore3.getId()),
+                () -> assertEquals(scoreRepository.findAllScoresByDogNumber(5L).get(0).getId(), savedScore3.getId()));
     }
 
 }

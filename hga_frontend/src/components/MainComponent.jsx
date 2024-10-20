@@ -38,9 +38,9 @@ const MainComponent = () => {
                     </thead>
                     <tbody>
                         <tr key={hunt.id}>
-                            <td className="medium-text" style={{ width: '300px' }}>{hunt.name}</td>
-                            <td className="medium-text" style={{ width: '300px' }}>{hunt.date}</td>
-                            <td className="medium-text" style={{ width: '300px' }}>{hunt.timeInterval}</td>
+                            <td className="hunt-text" style={{ width: '300px' }}>{hunt.name}</td>
+                            <td className="hunt-text" style={{ width: '300px' }}>{hunt.date}</td>
+                            <td className="hunt-text" style={{ width: '300px' }}>{hunt.timeInterval}</td>
                         </tr>
                     </tbody>
                 </table>

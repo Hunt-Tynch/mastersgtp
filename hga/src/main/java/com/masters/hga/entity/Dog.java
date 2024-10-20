@@ -26,7 +26,7 @@ import lombok.Setter;
 public class Dog {
 
     /** Hunt that the dog is in */
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Hunt hunt;
     /** Number assigned to dog for hunt. (1-999) */
     @Id
@@ -48,7 +48,7 @@ public class Dog {
     /** Dam of the dog */
     private String dam;
     /** Kennel the dog belongs to. */
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Kennel kennel;
 
     /**

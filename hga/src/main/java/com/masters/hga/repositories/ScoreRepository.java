@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.masters.hga.entity.Judge;
 import com.masters.hga.entity.Score;
 
 public interface ScoreRepository extends JpaRepository<Score, Long> {
@@ -16,5 +17,7 @@ public interface ScoreRepository extends JpaRepository<Score, Long> {
             "s.fourthDog.number = :dogNumber OR " +
             "s.fifthDog.number = :dogNumber")
     List<Score> findAllScoresByDogNumber(@Param("dogNumber") Long dogNumber);
+
+    List<Score> findByJudge(Judge judge);
 
 }

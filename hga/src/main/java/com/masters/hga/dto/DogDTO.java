@@ -31,11 +31,11 @@ public class DogDTO {
     /** Registration number for the Dog */
     private String regNumber;
     /** Speed and Drive Score for the hunt. */
-    private Integer sdscore;
+    private int sdscore;
     /** Endurance Score for the hunt. */
-    private Integer escore;
+    private int escore;
     /** Total Score for the hunt. */
-    private Integer total;
+    private int total;
     /** Sire of the dog. */
     private String sire;
     /** Dam of the dog */

@@ -1,6 +1,5 @@
 package com.masters.hga.dto;
 
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,16 +19,13 @@ public class ScoreDTO {
     private Long id;
     /** Time of the score */
     private String time;
-    @OneToOne
+
     private DogDTO firstDog;
-    @OneToOne
     private DogDTO secondDog;
-    @OneToOne
     private DogDTO thirdDog;
-    @OneToOne
     private DogDTO fourthDog;
-    @OneToOne
     private DogDTO fifthDog;
+    private JudgeDTO judge;
 
     /**
      * Initial constructor for a Score. Assigns a time and the list of dogs to add.
@@ -37,9 +33,10 @@ public class ScoreDTO {
      * @param time Time of the score
      * @param dogs List of dogs involved
      */
-    public ScoreDTO(String time, DogDTO... dogs) {
+    public ScoreDTO(String time, JudgeDTO judge, DogDTO... dogs) {
         this();
         setTime(time);
+        setJudge(judge);
         switch (dogs.length) {
             case 5:
                 setFifthDog(dogs[4]);

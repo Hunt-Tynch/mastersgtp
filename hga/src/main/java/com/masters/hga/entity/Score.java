@@ -25,11 +25,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(indexes = {
-        @Index(name = "idx_first_dog", columnList = "first_dog_id"),
-        @Index(name = "idx_second_dog", columnList = "second_dog_id"),
-        @Index(name = "idx_third_dog", columnList = "third_dog_id"),
-        @Index(name = "idx_fourth_dog", columnList = "fourth_dog_id"),
-        @Index(name = "idx_fifth_dog", columnList = "fifth_dog_id")
+        @Index(name = "idx_first_dog", columnList = "first_dog_number"),
+        @Index(name = "idx_second_dog", columnList = "second_dog_number"),
+        @Index(name = "idx_third_dog", columnList = "third_dog_number"),
+        @Index(name = "idx_fourth_dog", columnList = "fourth_dog_number"),
+        @Index(name = "idx_fifth_dog", columnList = "fifth_dog_number")
 })
 public class Score {
     /** Unique ID for scores */
@@ -54,15 +54,19 @@ public class Score {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private Dog fifthDog;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Judge judge;
+
     /**
      * Initial constructor for a Score. Assigns a time and the list of dogs to add.
      * 
      * @param time Time of the score
      * @param dogs List of dogs involved
      */
-    public Score(String time, Dog... dogs) {
+    public Score(String time, Judge judge, Dog... dogs) {
         this();
         setTime(time);
+        setJudge(judge);
         switch (dogs.length) {
             case 5:
                 setFifthDog(dogs[4]);

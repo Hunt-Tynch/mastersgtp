@@ -41,7 +41,7 @@ public class DogController {
         return dogService.getDogsByStake(stake);
     }
 
-    @GetMapping("/stake")
+    @GetMapping
     public List<DogDTO> getAllDogs() {
         return dogService.getAllDogs();
     }

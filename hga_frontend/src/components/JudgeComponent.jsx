@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { deleteJudge, getJudges, postJudge } from "../services/JudgeService";
+import { getAllJudgeScores } from "../services/ScoreService";
 
 const JudgeComponent = () => {
     const [judges, setJudges] = useState([]);
@@ -11,6 +12,7 @@ const JudgeComponent = () => {
     const [memberPIN, setMemberPIN] = useState(null)
     const [error, setError] = useState(null)
     const [success, setSuccess] = useState(null)
+    const [scores, setScores] = useState([])
 
     useEffect(() => {
         getJudges().then(ret => {
@@ -30,6 +32,11 @@ const JudgeComponent = () => {
 
     const handleSelect = (judge) => {
         setSelectedJudge(judge);
+        getAllJudgeScores(judge.id).then(ret => {
+            setScores(ret.data)
+        }).catch(err => {
+            console.log(err)
+        })
         setSearchTerm(""); // Clear the search input after selection
     };
 
@@ -110,45 +117,53 @@ const JudgeComponent = () => {
                         {filteredJudges.length === 0 && searchTerm && <p>No Judges available.</p>}
                     </div>
                     {selectedJudge.id && (
-                        <div className="container">
-                            <p className="medium-text">Selected Judge: <br />#{selectedJudge.id}, {selectedJudge.name}</p>
+                        <div className="container d-flex flex-column justify-content-center align-items-center" style={{marginTop: '30px'}}>
+                            <div className="medium-text" style={{marginBottom: '15px'}}>Selected Judge: <br /><div className="medium-text" style={{background: 'yellow', maxWidth: '600px'}}>#{selectedJudge.id}, {selectedJudge.name}</div></div>
                             <button className="btn btn-danger" onClick={handleDelete}>Delete</button>
                             <div className="d-flex justify-content-center">
                                 <div style={{minWidth:'400px', marginRight: '100px'}}>
                                     <h1 className="large-text">Scores</h1>
+                                    <div style={{overflowY: 'auto', maxHeight: '60vh'}}>
                                     <table className="table table-striped table-bordered">
                                         <thead>
                                             <tr>
-                                                <th>Position</th>
-                                                <th>Dog</th>
                                                 <th>Time</th>
+                                                <th>Dogs</th>
+                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td></td>
-                                            </tr>
+                                            {scores.map(score => (
+                                                <tr>
+                                                    <td>{score.time}</td>
+                                                    <td>
+                                                        {score.firstDog.number}<br/>
+                                                        {score.secondDog && score.secondDog.number}<br/>
+                                                        {score.thirdDog && score.thirdDog.number}<br/>
+                                                        {score.fourthDog && score.fourthDog.number}<br/>
+                                                        {score.fifthDog && score.fifthDog.number}
+                                                    </td>
+                                                    <td>
+                                                        <button className="btn btn-secondary">Edit</button>
+                                                        <button className="btn btn-danger">Delete</button>
+                                                    </td>
+                                                </tr>
+                                            ))}
                                         </tbody>
                                     </table>
+                                    </div>
                                 </div>
                                 <div style={{minWidth:'400px'}}>
                                     <h1 className="large-text">Scratches</h1>
                                     <table className="table table-striped table-bordered">
                                         <thead>
                                             <tr>
+                                                <th>Time</th>
                                                 <th>Dog</th>
                                                 <th>Reason</th>
-                                                <th>Time</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {selectedJudge.scratches.map(scratch => (
-                                                <tr>
-                                                    <td>{scratch.dog.number}</td>
-                                                    <td>{scratch.reason}</td>
-                                                    <td>{scratch.time}</td>
-                                                </tr>
-                                            ))}
                                         </tbody>
                                     </table>
                                 </div>

@@ -37,9 +37,9 @@ public class HuntService {
 	private ScratchRepository scratchRepository;
 
 	public HuntDTO newHunt(final HuntDTO dto) {
-		judgeRepository.deleteAll();
 		scoreRepository.deleteAll();
 		scratchRepository.deleteAll();
+		judgeRepository.deleteAll();
 		dogRepository.deleteAll();
 		huntRepository.deleteAll();
 		kennelRepository.deleteAll();

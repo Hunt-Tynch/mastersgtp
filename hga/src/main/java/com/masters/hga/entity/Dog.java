@@ -38,11 +38,11 @@ public class Dog {
     /** Registration number for the Dog */
     private String regNumber;
     /** Speed and Drive Score for the hunt. */
-    private Integer sdscore;
+    private int sdscore;
     /** Endurance Score for the hunt. */
-    private Integer escore;
+    private int escore;
     /** Total Score for the hunt */
-    private Integer total;
+    private int total;
     /** Sire of the dog. */
     private String sire;
     /** Dam of the dog */
@@ -51,16 +51,6 @@ public class Dog {
     @ManyToOne(fetch = FetchType.LAZY)
     private Kennel kennel;
 
-    /**
-     * Initial constructor for a Dog, assigns a score of 0 and assigns other values
-     * as given.
-     * 
-     * @param number Number of the dog
-     * @param name   Name of the dog
-     * @param sire   Sire of the dog
-     * @param dam    Dam of the dog
-     * @param kennel Kennel of the dog
-     */
     public Dog(Hunt hunt, Long number, StakeType stake, String name, String regNumber, String sire, String dam,
             Kennel kennel) {
         this(hunt, number, stake, name, regNumber, 0, 0, 0, sire, dam, kennel);

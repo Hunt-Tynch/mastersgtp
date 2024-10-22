@@ -1,13 +1,7 @@
 package com.masters.hga.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,15 +26,5 @@ public class Judge {
     private String memberPIN;
     /** Judge's name */
     private String name;
-    /** List of scores made by Judge */
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Score> scores;
-    /** List of scratches made by Judge */
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Scratch> scratches;
-
-    public Judge(Long id, String memberPIN, String name) {
-        this(id, memberPIN, name, new ArrayList<Score>(), new ArrayList<Scratch>());
-    }
 
 }

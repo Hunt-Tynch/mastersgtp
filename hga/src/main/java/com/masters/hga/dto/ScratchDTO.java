@@ -1,6 +1,5 @@
 package com.masters.hga.dto;
 
-import com.masters.hga.entity.Dog;
 import com.masters.hga.entity.enums.ScratchType;
 
 import lombok.AllArgsConstructor;
@@ -21,11 +20,12 @@ public class ScratchDTO {
     /** Unique id */
     private Long id;
     /** Dog that is scratched */
-    private Dog dog;
+    private DogDTO dog;
     /** Reason for being scratched */
     private ScratchType reason;
     /** Time of scratch */
     private String time;
+    private JudgeDTO judge;
 
     /**
      * Initial constructor for a scratch.
@@ -34,8 +34,8 @@ public class ScratchDTO {
      * @param reason Reason for scratch
      * @param time   Time of scratch
      */
-    public ScratchDTO(Dog dog, ScratchType reason, String time) {
-        this(null, dog, reason, time);
+    public ScratchDTO(DogDTO dog, ScratchType reason, String time, JudgeDTO judge) {
+        this(null, dog, reason, time, judge);
     }
 
 }

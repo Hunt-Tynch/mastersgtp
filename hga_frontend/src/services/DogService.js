@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const REST_API_BASE_URL = "http://localhost:8080/dogs"
 
-export const getAllDogs = () => axios.get(REST_API_BASE_URL + '/stake')
+export const getAllDogs = () => axios.get(REST_API_BASE_URL)
 
 export const getDogsByStake = (stake) => axios.get(REST_API_BASE_URL + '/stake/' + stake)
 

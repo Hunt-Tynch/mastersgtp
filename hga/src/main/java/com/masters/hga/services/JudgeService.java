@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.masters.hga.dto.JudgeDTO;
+import com.masters.hga.dto.ScoreDTO;
 import com.masters.hga.entity.Judge;
 import com.masters.hga.mapper.JudgeMapper;
 import com.masters.hga.repositories.JudgeRepository;
@@ -15,6 +16,12 @@ public class JudgeService {
 
     @Autowired
     private JudgeRepository judgeRepository;
+
+    @Autowired
+    private ScoreService scoreService;
+
+    @Autowired
+    private ScratchService scratchService;
 
     public boolean exists(Long id) {
         return judgeRepository.existsById(id);
@@ -27,6 +34,10 @@ public class JudgeService {
 
     public void deleteJudge(Long id) {
         if (exists(id)) {
+            List<ScoreDTO> scores = scoreService.getAllScoresByJudge(id);
+            for (ScoreDTO s : scores) {
+                scoreService.deleteScore(s.getId());
+            }
             judgeRepository.deleteById(id);
         }
     }

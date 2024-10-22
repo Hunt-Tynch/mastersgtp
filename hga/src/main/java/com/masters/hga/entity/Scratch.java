@@ -37,6 +37,9 @@ public class Scratch {
     /** Time of scratch */
     private String time;
 
+    @ManyToOne
+    private Judge judge;
+
     /**
      * Initial constructor for a scratch.
      * 
@@ -44,8 +47,8 @@ public class Scratch {
      * @param reason Reason for scratch
      * @param time   Time of scratch
      */
-    public Scratch(Dog dog, ScratchType reason, String time) {
-        this(null, dog, reason, time);
+    public Scratch(Dog dog, ScratchType reason, String time, Judge judge) {
+        this(null, dog, reason, time, judge);
     }
 
 }

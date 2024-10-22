@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { deleteJudge, getJudges, postJudge } from "../services/JudgeService";
-import { getAllJudgeScores } from "../services/ScoreService";
+import { deleteScore, getAllJudgeScores } from "../services/ScoreService";
 
 const JudgeComponent = () => {
     const [judges, setJudges] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedJudge, setSelectedJudge] = useState({ id: null });
     const [selected, setSelected] = useState(false)
-    const [number, setNumber] = useState(null)
-    const [name, setName] = useState(null)
-    const [memberPIN, setMemberPIN] = useState(null)
+    const [number, setNumber] = useState("")
+    const [name, setName] = useState("")
+    const [memberPIN, setMemberPIN] = useState("")
     const [error, setError] = useState(null)
     const [success, setSuccess] = useState(null)
     const [scores, setScores] = useState([])
@@ -74,8 +74,20 @@ const JudgeComponent = () => {
         });
     };
 
+    const handleDeleteScore = (id) => {
+        deleteScore(id).then(() => {
+            getAllJudgeScores(selectedJudge.id).then(ret => {
+                setScores(ret.data)
+            }).catch(err => {
+                console.log(err)
+            })
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
     return (
-        <div className="container d-flex justify-content-center align-items-start">
+        <div className="container d-flex justify-content-center align-items-start" style={{overflowX: '100vw', minWidth: '100vw', minHeight: '100vh'}}>
             <div className="judge-section" style={{ flex: 1, background: '#c0c0c0', border: '3px solid black', borderRadius: '5px', padding: '10px' }}>
                 <div className="text-center">
                     <div className="large-text">Judges</div>
@@ -84,6 +96,7 @@ const JudgeComponent = () => {
                         <input
                             type="text"
                             placeholder="Search Judges by Name or Id"
+                            value={searchTerm}
                             onChange={e => setSearchTerm(e.target.value)}
                             onSelect={() => { setSelectedJudge({ id: null }); setSelected(true); }}
                             onBlur={() => { setTimeout(() => {setSelected(false) }, 200) }}
@@ -134,7 +147,7 @@ const JudgeComponent = () => {
                                         </thead>
                                         <tbody>
                                             {scores.map(score => (
-                                                <tr>
+                                                <tr key={score.id}>
                                                     <td>{score.time}</td>
                                                     <td>
                                                         {score.firstDog.number}<br/>
@@ -145,7 +158,7 @@ const JudgeComponent = () => {
                                                     </td>
                                                     <td>
                                                         <button className="btn btn-secondary">Edit</button>
-                                                        <button className="btn btn-danger">Delete</button>
+                                                        <button className="btn btn-danger" onClick={() => handleDeleteScore(score.id)}>Delete</button>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -175,7 +188,7 @@ const JudgeComponent = () => {
                             <p className="large-text" style={{ marginTop: '50px' }}>Add Judge</p>
                             {error && <div className="alert alert-danger">{error}</div>}
                             {success && <div className="alert alert-success">{success}</div>}
-                            <input type="number" value={ number } onChange={e => setNumber(e.target.value)} placeHolder="Number"></input>
+                            <input type="number" value={ number } onChange={e => setNumber(e.target.value)} placeholder="Number"></input>
                             <input type="text" value={ name } onChange={e => setName(e.target.value)} placeholder="Name"></input>
                             <input type="text" value={ memberPIN } onChange={e => setMemberPIN(e.target.value)} placeholder="Member PIN"></input>
                             <button type="btn btn-secondary" onClick={ addJudge } style={{marginTop: '10px', background: 'lightgray'}}>Add Judge</button>

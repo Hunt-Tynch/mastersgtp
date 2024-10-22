@@ -43,6 +43,8 @@ public class DogDTO {
     /** Kennel the dog belongs to. */
     private KennelDTO kennel;
 
+    private ScoreDTO currentScore;
+
     /**
      * Initial constructor for a Dog, assigns a score of 0 and assigns other values
      * as given.
@@ -55,7 +57,7 @@ public class DogDTO {
      */
     public DogDTO(HuntDTO hunt, Long number, StakeType stake, String name, String regNumber, String sire, String dam,
             KennelDTO kennel) {
-        this(hunt, number, stake, name, regNumber, 0, 0, 0, sire, dam, kennel);
+        this(hunt, number, stake, name, regNumber, 0, 0, 0, sire, dam, kennel, null);
     }
 
 }

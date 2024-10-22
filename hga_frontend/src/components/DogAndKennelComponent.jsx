@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { deleteDog, getAllDogs, getDogsByKennel, getDogsByStake, postDogs } from "../services/DogService";
+import { deleteDog, getAllDogs, getAllDogsByScore, getDogsByKennel, getDogsByKennelOrder, getDogsByStake, getDogsByStakeOrder, postDogs } from "../services/DogService";
 import { listHunt } from "../services/HuntService";
 import { deleteKennel, listKennel, makeKennel } from "../services/KennelService";
 
@@ -203,23 +203,49 @@ const DogAndKennelComponent = () => {
         setSelectedKennel({ id: null})
     }
 
+    const getSorted = () => {
+        if (selectedKennel.id) {
+            getDogsByKennelOrder(selectedKennel.id).then(ret => {
+                setDogs(ret.data)
+            }).catch(err => {
+                console.log(err)
+            })
+        } else if (selectedStake) {
+            if (selectedStake === 'ALL') {
+                getAllDogsByScore().then(ret => {
+                    setDogs(ret.data)
+                }).catch(err => {
+                    console.log(err)
+                })
+            } else {
+                getDogsByStakeOrder(selectedStake).then(ret => {
+                    setDogs(ret.data)
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
+        } else {
+            return
+        }
+    }
+
     return (
-        <div className="container d-flex justify-content-center align-items-start">
-            <div className="kennel-section" style={{ flex: 1, marginRight: '20px', background: '#c0c0c0', border: '3px solid black', borderRadius: '5px', padding: '10px', maxWidth: '400px' }}>
-                <div className="text-center">
+        <div className="container d-flex" style={{overflowX: 'auto', minWidth: '100vw'}}>
+            <div className="kennel-section" style={{ flex: 1, marginRight: '20px', background: '#c0c0c0', border: '3px solid black', borderRadius: '5px', padding: '10px' }}>
+                <div className="text-center justify-content-center align-items-center d-flex flex-column">
                     <div className="large-text">Kennels</div>
-                    <div style={{border: '3px solid black'}}>
+                    <div className="d-flex justify-content-center" style={{border: '3px solid black', minWidth: '300px'}}>
                         <input
                             type="text"
                             placeholder="Search Kennels by Name"
                             onChange={e => setSearchTerm(e.target.value)}
-                            style={{ margin: '5px 0', width: '75%' }}
+                            style={{ margin: '5px 0', width: '90%' }}
                         />
                     </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <input type="text" placeholder="Name" onChange={e => setName(e.target.value)} style={{ margin: '5px 0' }} />
-                        <input type="text" placeholder="Town" onChange={e => setTown(e.target.value)} style={{ margin: '5px 0' }} />
-                        <input type="text" placeholder="State" onChange={e => setState(e.target.value)} style={{ margin: '5px 0' }} />
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '20px' }}>
+                        <input type="text" placeholder="Name" onChange={e => setName(e.target.value)} style={{ margin: '5px 0', minWidth: '270px' }} />
+                        <input type="text" placeholder="Town" onChange={e => setTown(e.target.value)} style={{ margin: '5px 0', minWidth: '270px' }} />
+                        <input type="text" placeholder="State" onChange={e => setState(e.target.value)} style={{ margin: '5px 0', minWidth: '270px' }} />
                         <button className="btn btn-secondary" onClick={addKennel}>Add Kennel</button>
                     </div>
                 </div>
@@ -241,6 +267,7 @@ const DogAndKennelComponent = () => {
                     <button className="btn btn-secondary mb-2 mx-2 col-auto" onClick={() => getStake("ALL_AGE")}>View ALL_AGE Dogs</button>
                     <button className="btn btn-secondary mb-2 mx-2 col-auto" onClick={() => getStake("DERBY")}>View DERBY Dogs</button>
                     <button className="btn btn-secondary mb-2 mx-2 col-auto" onClick={getAll}>View ALL Dogs</button>
+                    <button className="btn btn-secondary mb-2 mx-2 col-auto" onClick={getSorted}>Sort Dogs By Score</button>
                 </div>
             </div>
 
@@ -295,6 +322,8 @@ const DogAndKennelComponent = () => {
                                 <thead>
                                     <tr>
                                         <th>Number</th>
+                                        <th>Total</th>
+                                        <th>Speed and Drive</th>
                                         <th>Name</th>
                                         <th>Stake</th>
                                         <th>Kennel Name</th>
@@ -306,6 +335,8 @@ const DogAndKennelComponent = () => {
                                         dogs.map(dog => (
                                             <tr key={dog.number}>
                                                 <td>{dog.number}</td>
+                                                <td>{dog.total}</td>
+                                                <td>{dog.sdscore}</td>
                                                 <td>{dog.name}</td>
                                                 <td>{dog.stake}</td>
                                                 <td>{dog.kennel.owner}</td>
@@ -313,13 +344,14 @@ const DogAndKennelComponent = () => {
                                                     <button
                                                         className="btn btn-danger"
                                                         onClick={() => removeDog(dog.number)}
+                                                        disabled={dog.total === 0 ? false : true}
                                                     >Delete
                                                     </button>
                                                 </td>
                                             </tr>
                                         ))
                                     ) : (
-                                        <tr><td colSpan="5">No dogs available.</td></tr>
+                                        <tr><td colSpan="7">No dogs available.</td></tr>
                                     )}
                                 </tbody>
                             </table>
@@ -332,10 +364,12 @@ const DogAndKennelComponent = () => {
                     <div className="text-center">
                         <h4 className="medium-text">{selectedStake} Dogs</h4>
                         <div className="dogs-list mt-3">
-                            <table className="table table-striped table-bordered">
+                        <table className="table table-striped table-bordered">
                                 <thead>
                                     <tr>
                                         <th>Number</th>
+                                        <th>Total</th>
+                                        <th>Speed and Drive</th>
                                         <th>Name</th>
                                         <th>Stake</th>
                                         <th>Kennel Name</th>
@@ -347,6 +381,8 @@ const DogAndKennelComponent = () => {
                                         dogs.map(dog => (
                                             <tr key={dog.number}>
                                                 <td>{dog.number}</td>
+                                                <td>{dog.total}</td>
+                                                <td>{dog.sdscore}</td>
                                                 <td>{dog.name}</td>
                                                 <td>{dog.stake}</td>
                                                 <td>{dog.kennel.owner}</td>
@@ -354,13 +390,14 @@ const DogAndKennelComponent = () => {
                                                     <button
                                                         className="btn btn-danger"
                                                         onClick={() => removeDog(dog.number)}
+                                                        disabled={dog.total === 0 ? false : true}
                                                     >Delete
                                                     </button>
                                                 </td>
                                             </tr>
                                         ))
                                     ) : (
-                                        <tr><td colSpan="5">No dogs available.</td></tr>
+                                        <tr><td colSpan="7">No dogs available.</td></tr>
                                     )}
                                 </tbody>
                             </table>

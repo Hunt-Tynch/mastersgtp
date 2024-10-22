@@ -31,6 +31,14 @@ public class DogController {
         return dogService.getDogsByKennel(id);
     }
 
+    @GetMapping("/kennel/{id}/order")
+    public List<DogDTO> getByKennelIdOrder(@PathVariable Long id) {
+        if (!dogService.kennelExists(id)) {
+            return null;
+        }
+        return dogService.getDogsByKennelOrder(id);
+    }
+
     @GetMapping("{number}")
     public DogDTO getDog(@PathVariable Long number) {
         return dogService.getDogByNumber(number);
@@ -41,9 +49,19 @@ public class DogController {
         return dogService.getDogsByStake(stake);
     }
 
+    @GetMapping("/stake/{stake}/order")
+    public List<DogDTO> getDogsByStakeOrder(@PathVariable StakeType stake) {
+        return dogService.getDogsByStakeOrder(stake);
+    }
+
     @GetMapping
     public List<DogDTO> getAllDogs() {
         return dogService.getAllDogs();
+    }
+
+    @GetMapping("/score")
+    public List<DogDTO> getAllDogsByScore() {
+        return dogService.getAllDogsByScore();
     }
 
     @PostMapping

@@ -1,11 +1,14 @@
 package com.masters.hga.entity;
 
+import org.hibernate.annotations.Formula;
+
 import com.masters.hga.entity.enums.StakeType;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,6 +45,7 @@ public class Dog {
     /** Endurance Score for the hunt. */
     private int escore;
     /** Total Score for the hunt */
+    @Formula("sdscore + escore")
     private int total;
     /** Sire of the dog. */
     private String sire;
@@ -51,9 +55,12 @@ public class Dog {
     @ManyToOne(fetch = FetchType.LAZY)
     private Kennel kennel;
 
+    @OneToOne
+    private Score currentScore;
+
     public Dog(Hunt hunt, Long number, StakeType stake, String name, String regNumber, String sire, String dam,
             Kennel kennel) {
-        this(hunt, number, stake, name, regNumber, 0, 0, 0, sire, dam, kennel);
+        this(hunt, number, stake, name, regNumber, 0, 0, 0, sire, dam, kennel, null);
     }
 
 }

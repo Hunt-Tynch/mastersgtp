@@ -26,7 +26,7 @@ public class KennelService {
     }
 
     public void deleteKennel(Long id) {
-        dogRepository.deleteAllInBatch(dogRepository.findByKennelOrderByTotalDesc(kennelRepository.findById(id).get()));
+        dogRepository.deleteAllInBatch(dogRepository.findByKennelOrderByTotalDesc(id));
         kennelRepository.deleteById(id);
     }
 

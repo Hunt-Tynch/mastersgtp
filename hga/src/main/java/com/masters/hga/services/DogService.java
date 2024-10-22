@@ -32,14 +32,26 @@ public class DogService {
         return DogMapper.INSTANCE.toDtoList(dogRepository.findAll());
     }
 
+    public List<DogDTO> getAllDogsByScore() {
+        return DogMapper.INSTANCE.toDtoList(dogRepository.findAllDogs());
+    }
+
     public List<DogDTO> getDogsByStake(StakeType stake) {
         List<Dog> dogs = dogRepository.findByStake(stake);
         return DogMapper.INSTANCE.toDtoList(dogs);
     }
 
+    public List<DogDTO> getDogsByStakeOrder(StakeType stake) {
+        return DogMapper.INSTANCE.toDtoList(dogRepository.findByStakeOrderByTotalDesc(stake));
+    }
+
     public List<DogDTO> getDogsByKennel(Long kennelId) {
         Kennel kennel = kennelRepository.findById(kennelId).get();
         return DogMapper.INSTANCE.toDtoList(dogRepository.findByKennel(kennel));
+    }
+
+    public List<DogDTO> getDogsByKennelOrder(Long kennelId) {
+        return DogMapper.INSTANCE.toDtoList(dogRepository.findByKennelOrderByTotalDesc(kennelId));
     }
 
     public boolean kennelExists(Long id) {
@@ -58,13 +70,6 @@ public class DogService {
     public DogDTO getDogByNumber(Long number) {
         Dog dog = dogRepository.findById(number).get();
         return DogMapper.INSTANCE.toDTO(dog);
-    }
-
-    public DogDTO updateSDScore(DogDTO dto) {
-        Dog dog = DogMapper.INSTANCE.toEntity(getDogByNumber(dto.getNumber()));
-        dog.setSdscore(dto.getSdscore());
-        Dog savedDog = dogRepository.save(dog);
-        return DogMapper.INSTANCE.toDTO(savedDog);
     }
 
     public DogDTO updateEScore(DogDTO dto) {

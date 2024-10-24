@@ -40,12 +40,35 @@ public class Dog {
     private String name;
     /** Registration number for the Dog */
     private String regNumber;
-    /** Speed and Drive Score for the hunt. */
-    private int sdscore;
-    /** Endurance Score for the hunt. */
-    private int escore;
+    /** Speed and Drive Score for day 1. */
+    private int sdscore1;
+    /** Endurance Score for the day 1. */
+    @Formula("CASE WHEN sdscore1 >= 60 THEN sdscore1 * 0.1 ELSE 0 END")
+    private int escore1;
+    /** Speed and Drive Score for day 2. */
+    private int sdscore2;
+    /** Endurance Score for the day 2. */
+    @Formula("CASE WHEN sdscore2 >= 60 THEN sdscore2 * 0.2 ELSE 0 END")
+    private int escore2;
+    /** Speed and Drive Score for day 3. */
+    private int sdscore3;
+    /** Endurance Score for the day 3. */
+    @Formula("CASE WHEN sdscore3 >= 60 THEN sdscore3 * 0.3 ELSE 0 END")
+    private int escore3;
+    /** Speed and Drive Score for day 4. */
+    private int sdscore4;
+    /** Endurance Score for the day 4. */
+    @Formula("CASE WHEN sdscore4 >= 60 THEN sdscore4 * 0.4 ELSE 0 END")
+    private int escore4;
     /** Total Score for the hunt */
-    @Formula("sdscore + escore")
+    @Formula("sdscore1 + " +
+            "(CASE WHEN sdscore1 >= 60 THEN sdscore1 * 0.1 ELSE 0 END) + " +
+            "sdscore2 + " + //
+            "(CASE WHEN sdscore2 >= 60 THEN sdscore2 * 0.2 ELSE 0 END) + " +
+            "sdscore3 + " +
+            "(CASE WHEN sdscore3 >= 60 THEN sdscore3 * 0.3 ELSE 0 END) + " +
+            "sdscore4 + " +
+            "(CASE WHEN sdscore4 >= 60 THEN sdscore4 * 0.4 ELSE 0 END)")
     private int total;
     /** Sire of the dog. */
     private String sire;
@@ -60,7 +83,37 @@ public class Dog {
 
     public Dog(Hunt hunt, Long number, StakeType stake, String name, String regNumber, String sire, String dam,
             Kennel kennel) {
-        this(hunt, number, stake, name, regNumber, 0, 0, 0, sire, dam, kennel, null);
+        this(hunt, number, stake, name, regNumber, 0, 0, 0, 0, 0, 0, 0, 0, 0, sire, dam, kennel, null);
+    }
+
+    public void place(int points, int day) {
+        switch (day) {
+            case 1:
+                sdscore1 += points;
+                break;
+            case 2:
+                sdscore2 += points;
+                break;
+            case 3:
+                sdscore3 += points;
+            case 4:
+                sdscore4 += points;
+        }
+    }
+
+    public void removePlace(int points, int day) {
+        switch (day) {
+            case 1:
+                sdscore1 -= points;
+                break;
+            case 2:
+                sdscore2 -= points;
+                break;
+            case 3:
+                sdscore3 -= points;
+            case 4:
+                sdscore4 -= points;
+        }
     }
 
 }

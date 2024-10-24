@@ -20,4 +20,13 @@ public interface ScoreRepository extends JpaRepository<Score, Long> {
 
     List<Score> findByJudge(Judge judge);
 
+    List<Score> findAllScoreByDay(int day);
+
+    @Query("SELECT s FROM Score s where s.day = :day AND (s.firstDog.number = :dogNumber OR " +
+            "s.secondDog.number = :dogNumber OR " +
+            "s.thirdDog.number = :dogNumber OR " +
+            "s.fourthDog.number = :dogNumber OR " +
+            "s.fifthDog.number = :dogNumber)")
+    List<Score> findAllScoreByDayAndDogNumber(@Param("day") int day, Long dogNumber);
+
 }

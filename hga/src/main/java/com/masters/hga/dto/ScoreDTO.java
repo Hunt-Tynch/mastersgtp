@@ -18,14 +18,17 @@ public class ScoreDTO {
     /** Unique ID for scores */
     private Long id;
     /** Time of the score */
-    private String time;
+    private int time;
 
     private DogDTO firstDog;
     private DogDTO secondDog;
     private DogDTO thirdDog;
     private DogDTO fourthDog;
     private DogDTO fifthDog;
+    private DogDTO sixthDog;
+    private DogDTO seventhDog;
     private JudgeDTO judge;
+    private int day;
 
     /**
      * Initial constructor for a Score. Assigns a time and the list of dogs to add.
@@ -33,11 +36,16 @@ public class ScoreDTO {
      * @param time Time of the score
      * @param dogs List of dogs involved
      */
-    public ScoreDTO(String time, JudgeDTO judge, DogDTO... dogs) {
+    public ScoreDTO(int time, JudgeDTO judge, int day, DogDTO... dogs) {
         this();
         setTime(time);
         setJudge(judge);
+        setDay(day);
         switch (dogs.length) {
+            case 7:
+                setSeventhDog(dogs[6]);
+            case 6:
+                setSixthDog(dogs[5]);
             case 5:
                 setFifthDog(dogs[4]);
             case 4:

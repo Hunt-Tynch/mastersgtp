@@ -71,7 +71,7 @@ public class DogServiceTest {
 
         Judge judge1 = judgeRepository.save(new Judge(1L, "pin", "judge1"));
 
-        ScoreDTO scoreDTO = new ScoreDTO("10:00", JudgeMapper.INSTANCE.toDto(judge1),
+        ScoreDTO scoreDTO = new ScoreDTO(600, JudgeMapper.INSTANCE.toDto(judge1), 1,
                 DogMapper.INSTANCE.toDTO(dog2), DogMapper.INSTANCE.toDTO(dog3), DogMapper.INSTANCE.toDTO(dog1),
                 DogMapper.INSTANCE.toDTO(dog4), DogMapper.INSTANCE.toDTO(dog5));
 

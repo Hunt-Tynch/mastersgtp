@@ -72,18 +72,4 @@ public class DogService {
         return DogMapper.INSTANCE.toDTO(dog);
     }
 
-    public DogDTO updateEScore(DogDTO dto) {
-        Dog dog = DogMapper.INSTANCE.toEntity(getDogByNumber(dto.getNumber()));
-        dog.setEscore(dto.getEscore());
-        Dog savedDog = dogRepository.save(dog);
-        return DogMapper.INSTANCE.toDTO(savedDog);
-    }
-
-    public DogDTO updateTotalScore(DogDTO dto) {
-        Dog dog = DogMapper.INSTANCE.toEntity(getDogByNumber(dto.getNumber()));
-        dog.setTotal(dto.getTotal());
-        Dog savedDog = dogRepository.save(dog);
-        return DogMapper.INSTANCE.toDTO(savedDog);
-    }
-
 }

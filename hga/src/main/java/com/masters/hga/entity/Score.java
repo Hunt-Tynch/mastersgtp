@@ -37,7 +37,7 @@ public class Score {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     /** Time of the score */
-    private String time;
+    private int time;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private Dog firstDog;
@@ -54,20 +54,27 @@ public class Score {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private Dog fifthDog;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private Dog sixthDog;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private Dog seventhDog;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Judge judge;
 
-    /**
-     * Initial constructor for a Score. Assigns a time and the list of dogs to add.
-     * 
-     * @param time Time of the score
-     * @param dogs List of dogs involved
-     */
-    public Score(String time, Judge judge, Dog... dogs) {
+    private int day;
+
+    public Score(int time, Judge judge, int day, Dog... dogs) {
         this();
         setTime(time);
         setJudge(judge);
+        setDay(day);
         switch (dogs.length) {
+            case 7:
+                setSeventhDog(dogs[6]);
+            case 6:
+                setSixthDog(dogs[5]);
             case 5:
                 setFifthDog(dogs[4]);
             case 4:

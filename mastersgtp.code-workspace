@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "mastersgtp",
+			"path": "."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "coffee_maker_frontend",
+		"java.configuration.updateBuildConfiguration": "interactive",
+		"java.compile.nullAnalysis.mode": "automatic"
+	}
+}

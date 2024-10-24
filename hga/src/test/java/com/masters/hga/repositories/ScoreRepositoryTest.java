@@ -45,13 +45,13 @@ public class ScoreRepositoryTest {
         dog5 = dogRepository.save(dog5);
 
         // Create and save the first score with dog1
-        Score score1 = new Score("10:00", null, dog1);
+        Score score1 = new Score(600, null, 1, dog1);
         Score savedScore1 = scoreRepository.save(score1);
 
-        Score score2 = new Score("10:30", null, dog1, dog2, dog3);
+        Score score2 = new Score(630, null, 1, dog1, dog2, dog3);
         Score savedScore2 = scoreRepository.save(score2);
 
-        Score score3 = new Score("11:00", null, dog5, dog4, dog3);
+        Score score3 = new Score(660, null, 1, dog5, dog4, dog3);
         Score savedScore3 = scoreRepository.save(score3);
 
         // Assert results

@@ -31,37 +31,52 @@ public class ScoreService {
     public ScoreDTO createScore(ScoreDTO dto) {
         // Convert DTO to Entity
         Score score = ScoreMapper.INSTANCE.toEntity(dto);
+        int day = score.getDay();
 
         // Fetch managed Dog entities by their ID (number)
         Dog firstDog = dogRepository.findById(score.getFirstDog().getNumber()).get();
-        firstDog.setSdscore(firstDog.getSdscore() + 35); // Update score
+        firstDog.place(35, day);
 
         Dog secondDog = score.getSecondDog() != null
                 ? dogRepository.findById(score.getSecondDog().getNumber()).get()
                 : null;
         if (secondDog != null) {
-            secondDog.setSdscore(secondDog.getSdscore() + 30); // Update score
+            secondDog.place(30, day); // Update score
         }
 
         Dog thirdDog = score.getThirdDog() != null
                 ? dogRepository.findById(score.getThirdDog().getNumber()).get()
                 : null;
         if (thirdDog != null) {
-            thirdDog.setSdscore(thirdDog.getSdscore() + 25); // Update score
+            thirdDog.place(25, day); // Update score
         }
 
         Dog fourthDog = score.getFourthDog() != null
                 ? dogRepository.findById(score.getFourthDog().getNumber()).get()
                 : null;
         if (fourthDog != null) {
-            fourthDog.setSdscore(fourthDog.getSdscore() + 20); // Update score
+            fourthDog.place(20, day); // Update score
         }
 
         Dog fifthDog = score.getFifthDog() != null
                 ? dogRepository.findById(score.getFifthDog().getNumber()).get()
                 : null;
         if (fifthDog != null) {
-            fifthDog.setSdscore(fifthDog.getSdscore() + 15); // Update score
+            fifthDog.place(15, day); // Update score
+        }
+
+        Dog sixthDog = score.getSixthDog() != null
+                ? dogRepository.findById(score.getSixthDog().getNumber()).get()
+                : null;
+        if (sixthDog != null) {
+            sixthDog.place(10, day); // Update score
+        }
+
+        Dog seventhDog = score.getSeventhDog() != null
+                ? dogRepository.findById(score.getSeventhDog().getNumber()).get()
+                : null;
+        if (seventhDog != null) {
+            seventhDog.place(5, day); // Update score
         }
 
         // Set updated dogs back to score entity
@@ -70,6 +85,8 @@ public class ScoreService {
         score.setThirdDog(thirdDog);
         score.setFourthDog(fourthDog);
         score.setFifthDog(fifthDog);
+        score.setSixthDog(sixthDog);
+        score.setSeventhDog(seventhDog);
 
         // Save the score, which will also persist the updated dog entities due to
         // cascade settings
@@ -122,45 +139,7 @@ public class ScoreService {
 
     @Transactional
     public void deleteScore(Long id) {
-        Score score = scoreRepository.findById(id).get();
-        Dog firstDog = dogRepository.findById(score.getFirstDog().getNumber()).get();
-        firstDog.setSdscore(firstDog.getSdscore() - 35);
-
-        Dog secondDog = score.getSecondDog() != null
-                ? dogRepository.findById(score.getSecondDog().getNumber()).get()
-                : null;
-        if (secondDog != null) {
-            secondDog.setSdscore(secondDog.getSdscore() - 30); // Update score
-        }
-
-        Dog thirdDog = score.getThirdDog() != null
-                ? dogRepository.findById(score.getThirdDog().getNumber()).get()
-                : null;
-        if (thirdDog != null) {
-            thirdDog.setSdscore(thirdDog.getSdscore() - 25); // Update score
-        }
-
-        Dog fourthDog = score.getFourthDog() != null
-                ? dogRepository.findById(score.getFourthDog().getNumber()).get()
-                : null;
-        if (fourthDog != null) {
-            fourthDog.setSdscore(fourthDog.getSdscore() - 20); // Update score
-        }
-
-        Dog fifthDog = score.getFifthDog() != null
-                ? dogRepository.findById(score.getFifthDog().getNumber()).get()
-                : null;
-        if (fifthDog != null) {
-            fifthDog.setSdscore(fifthDog.getSdscore() - 15); // Update score
-        }
-
-        // Set updated dogs back to score entity
-        score.setFirstDog(firstDog);
-        score.setSecondDog(secondDog);
-        score.setThirdDog(thirdDog);
-        score.setFourthDog(fourthDog);
-        score.setFifthDog(fifthDog);
-        scoreRepository.save(score);
+        undoScore(id);
         scoreRepository.deleteById(id);
     }
 
@@ -177,91 +156,71 @@ public class ScoreService {
     }
 
     @Transactional
-    public ScoreDTO updateScore(ScoreDTO dto) {
-        Score score = scoreRepository.findById(dto.getId()).get();
+    private void undoScore(Long id) {
+        Score score = scoreRepository.findById(id).get();
+        int day = score.getDay();
+
+        // Fetch managed Dog entities by their ID (number)
         Dog firstDog = dogRepository.findById(score.getFirstDog().getNumber()).get();
-        firstDog.setSdscore(firstDog.getSdscore() - 35);
+        firstDog.removePlace(35, day);
 
         Dog secondDog = score.getSecondDog() != null
                 ? dogRepository.findById(score.getSecondDog().getNumber()).get()
                 : null;
         if (secondDog != null) {
-            secondDog.setSdscore(secondDog.getSdscore() - 30); // Update score
+            secondDog.removePlace(30, day); // Update score
         }
 
         Dog thirdDog = score.getThirdDog() != null
                 ? dogRepository.findById(score.getThirdDog().getNumber()).get()
                 : null;
         if (thirdDog != null) {
-            thirdDog.setSdscore(thirdDog.getSdscore() - 25); // Update score
+            thirdDog.removePlace(25, day); // Update score
         }
 
         Dog fourthDog = score.getFourthDog() != null
                 ? dogRepository.findById(score.getFourthDog().getNumber()).get()
                 : null;
         if (fourthDog != null) {
-            fourthDog.setSdscore(fourthDog.getSdscore() - 20); // Update score
+            fourthDog.removePlace(20, day); // Update score
         }
 
         Dog fifthDog = score.getFifthDog() != null
                 ? dogRepository.findById(score.getFifthDog().getNumber()).get()
                 : null;
         if (fifthDog != null) {
-            fifthDog.setSdscore(fifthDog.getSdscore() - 15); // Update score
+            fifthDog.removePlace(15, day); // Update score
         }
+
+        Dog sixthDog = score.getSixthDog() != null
+                ? dogRepository.findById(score.getSixthDog().getNumber()).get()
+                : null;
+        if (sixthDog != null) {
+            sixthDog.removePlace(10, day); // Update score
+        }
+
+        Dog seventhDog = score.getSeventhDog() != null
+                ? dogRepository.findById(score.getSeventhDog().getNumber()).get()
+                : null;
+        if (seventhDog != null) {
+            seventhDog.removePlace(5, day); // Update score
+        }
+
+        // Set updated dogs back to score entity
         score.setFirstDog(firstDog);
         score.setSecondDog(secondDog);
         score.setThirdDog(thirdDog);
         score.setFourthDog(fourthDog);
         score.setFifthDog(fifthDog);
+        score.setSixthDog(sixthDog);
+        score.setSeventhDog(seventhDog);
         scoreRepository.save(score);
+    }
 
-        Score newScore = ScoreMapper.INSTANCE.toEntity(dto);
-
-        firstDog = dogRepository.findById(newScore.getFirstDog().getNumber()).get();
-        firstDog.setSdscore(firstDog.getSdscore() + 35); // Update score
-
-        secondDog = newScore.getSecondDog() != null
-                ? dogRepository.findById(newScore.getSecondDog().getNumber()).get()
-                : null;
-        if (secondDog != null) {
-            secondDog.setSdscore(secondDog.getSdscore() + 30); // Update score
-        }
-
-        thirdDog = newScore.getThirdDog() != null
-                ? dogRepository.findById(newScore.getThirdDog().getNumber()).get()
-                : null;
-        if (thirdDog != null) {
-            thirdDog.setSdscore(thirdDog.getSdscore() + 25); // Update score
-        }
-
-        fourthDog = newScore.getFourthDog() != null
-                ? dogRepository.findById(newScore.getFourthDog().getNumber()).get()
-                : null;
-        if (fourthDog != null) {
-            fourthDog.setSdscore(fourthDog.getSdscore() + 20); // Update score
-        }
-
-        fifthDog = newScore.getFifthDog() != null
-                ? dogRepository.findById(newScore.getFifthDog().getNumber()).get()
-                : null;
-        if (fifthDog != null) {
-            fifthDog.setSdscore(fifthDog.getSdscore() + 15); // Update score
-        }
-
-        // Set updated dogs back to newScore entity
-        newScore.setFirstDog(firstDog);
-        newScore.setSecondDog(secondDog);
-        newScore.setThirdDog(thirdDog);
-        newScore.setFourthDog(fourthDog);
-        newScore.setFifthDog(fifthDog);
-
-        // Save the newScore, which will also persist the updated dog entities due to
-        // cascade settings
-        Score savedScore = scoreRepository.save(newScore);
-
-        // Return the saved Score as a DTO
-        return ScoreMapper.INSTANCE.toDto(savedScore);
+    @Transactional
+    public ScoreDTO updateScore(ScoreDTO dto) {
+        undoScore(dto.getId());
+        return createScore(dto);
     }
 
 }

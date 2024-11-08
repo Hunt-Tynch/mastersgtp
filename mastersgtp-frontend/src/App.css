@@ -1,0 +1,29 @@
+.App {
+  text-align: center;
+  font-family:'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+}
+
+/* App.css */
+.nav-link {
+  color: gray;
+  text-decoration: none;
+}
+
+.nav-link.active {
+  color: white;
+}
+
+@media print {
+  body * {
+      visibility: hidden;
+  }
+  .report-container, .report-container * {
+      visibility: visible;
+  }
+  .report-container {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+  }
+}

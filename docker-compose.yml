@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./mastersgtp
+      dockerfile: Dockerfile
+    image: mastersgtp-backend:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=production
+      - SPRING_DATASOURCE_URL=jdbc:mysql://host.docker.internal:3306/mastersgtp  # or actual IP if needed
+    networks:
+      - mastersgtp-network
+    restart: unless-stopped
+    pull_policy: never  # Prevents re-pulling image
+
+  frontend:
+    build:
+      context: ./mastersgtp-frontend
+      dockerfile: Dockerfile
+    image: mastersgtp-frontend:latest
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - mastersgtp-network
+    pull_policy: never  # Prevents re-pulling image
+
+networks:
+  mastersgtp-network:
+    driver: bridge

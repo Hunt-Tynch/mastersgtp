@@ -2,15 +2,18 @@
 Scoring software for Masters field trials
 
 ---
-## *Needed Installs*
+
+# Install Guide
+
+## *Needed Tools*
 *MySql*
 
-*Node.js*
+*Docker*
 
 ---
 ## MySql Instructions
 
 
 
-## Node.js Instructions
+## Docker Instructions
 

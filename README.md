@@ -5,7 +5,7 @@ Scoring software for Masters field trials
 ## *Needed Tools*
 ### [*Docker*](https://www.docker.com/get-started/)
 **Download Docker Desktop for your system**
-![image](https://github.com/user-attachments/assets/bc1f8089-c97a-4057-8995-795c184d91b0)
+[![image](https://github.com/user-attachments/assets/bc1f8089-c97a-4057-8995-795c184d91b0)](https://www.docker.com/get-started/)
 
 ---
 ### Docker info:

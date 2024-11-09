@@ -8,4 +8,3 @@ if %errorlevel% equ 0 (
     echo Failed to start containers.
     exit /b 1
 )
-

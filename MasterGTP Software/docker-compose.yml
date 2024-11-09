@@ -1,9 +1,6 @@
 services:
   backend:
-    build:
-      context: ./mastersgtp
-      dockerfile: Dockerfile
-    image: mastersgtp-backend:latest
+    image: mastersgtp-backend:latest       # Use the prebuilt backend image
     ports:
       - "8080:8080"
     environment:
@@ -14,19 +11,24 @@ services:
     networks:
       - mastersgtp-network
     restart: unless-stopped
-    pull_policy: never
+    deploy:
+      update_config:
+        delay: 0s
+      restart_policy:
+        condition: none
 
   frontend:
-    build:
-      context: ./mastersgtp-frontend
-      dockerfile: Dockerfile
-    image: mastersgtp-frontend:latest
+    image: mastersgtp-frontend:latest      # Use the prebuilt frontend image
     ports:
       - "3000:3000"
     restart: unless-stopped
     networks:
       - mastersgtp-network
-    pull_policy: never
+    deploy:
+      update_config:
+        delay: 0s
+      restart_policy:
+        condition: none
 
 networks:
   mastersgtp-network:

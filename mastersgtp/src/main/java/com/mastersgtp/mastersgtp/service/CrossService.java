@@ -186,4 +186,8 @@ public class CrossService {
     public List<Cross> getAllCrossesForDay(int day) {
         return crossRepository.findByDayOrderByCrossTimeDesc(day);
     }
+
+    public List<Cross> getDogAndDayCross(int number, int day) {
+        return crossRepository.findByDogsContainsAndDayOrderByCrossTime(dogRepository.findById(number).get(), day);
+    }
 }

@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-MastersgtpApplication<mastersgtp>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.mastersgtp.mastersgtp.MastersgtpApplication",
+            "projectName": "mastersgtp",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

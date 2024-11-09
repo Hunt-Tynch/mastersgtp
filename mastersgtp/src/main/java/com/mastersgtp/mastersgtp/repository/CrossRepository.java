@@ -12,6 +12,8 @@ public interface CrossRepository extends JpaRepository<Cross, Long> {
 
     List<Cross> findByDogsContainsOrderByCrossTimeDesc(Dog dog);
 
+    List<Cross> findByDogsContainsAndDayOrderByCrossTime(Dog dog, int day);
+
     List<Cross> findByJudgeOrderByCrossTimeDesc(Judge judge);
 
     List<Cross> findByDayOrderByCrossTimeDesc(int day);

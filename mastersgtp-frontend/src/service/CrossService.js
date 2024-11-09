@@ -13,3 +13,5 @@ export const deleteCross = (id) => axios.delete(`${BASE_URL}/${id}`)
 export const putCross = (id, cross) => axios.put(`${BASE_URL}/${id}`, cross)
 
 export const getAllCrossForDay = (day) => axios.get(`${BASE_URL}/day/${day}`)
+
+export const getAllCrossForDogAndDay = (day, number) => axios.get(`${BASE_URL}/day/${day}/dog/${number}`)

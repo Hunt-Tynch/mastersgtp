@@ -34,6 +34,11 @@ public class CrossController {
         return crossService.findByDog(number);
     }
 
+    @GetMapping("/day/{day}/dog/{number}")
+    public List<Cross> getAllCrossesForDogAndDay(@PathVariable("day") int day, @PathVariable("number") int number) {
+        return crossService.getDogAndDayCross(number, day);
+    }
+
     @GetMapping("/day/{day}")
     public List<Cross> getAllCrossesForDay(@PathVariable("day") int day) {
         return crossService.getAllCrossesForDay(day);

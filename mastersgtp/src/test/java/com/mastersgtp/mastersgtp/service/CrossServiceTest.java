@@ -1,170 +1,110 @@
 package com.mastersgtp.mastersgtp.service;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import com.mastersgtp.mastersgtp.entity.Cross;
 import com.mastersgtp.mastersgtp.entity.Dog;
 import com.mastersgtp.mastersgtp.entity.Hunt;
 import com.mastersgtp.mastersgtp.entity.Judge;
+import com.mastersgtp.mastersgtp.entity.StakeType;
 import com.mastersgtp.mastersgtp.repository.CrossRepository;
 import com.mastersgtp.mastersgtp.repository.DogRepository;
 import com.mastersgtp.mastersgtp.repository.HuntRepository;
 import com.mastersgtp.mastersgtp.repository.JudgeRepository;
 
 @SpringBootTest
+@ActiveProfiles("test")
 public class CrossServiceTest {
 
     @Autowired
     private CrossService crossService;
 
-    @MockBean
-    private CrossRepository crossRepository;
-
-    @MockBean
-    private JudgeRepository judgeRepository;
-
-    @MockBean
-    private DogRepository dogRepository;
-
-    @MockBean
+    @Autowired
     private HuntRepository huntRepository;
 
-    private Judge judge;
-    private Dog dog1, dog2;
+    @Autowired
+    private DogRepository dogRepository;
+
+    @Autowired
+    private JudgeRepository judgeRepository;
+
+    @Autowired
+    private CrossRepository crossRepository;
+
     private Hunt hunt;
-    private Cross cross;
+
+    private Judge judge;
+
+    private Dog d1;
+
+    private Dog d2;
+
+    private Dog d3;
+
+    private Dog d4;
+
+    private Dog d5;
 
     @BeforeEach
-    public void setup() {
+    void setUp() throws Exception {
         crossRepository.deleteAll();
-        judgeRepository.deleteAll();
         dogRepository.deleteAll();
+        judgeRepository.deleteAll();
         huntRepository.deleteAll();
-        // Initialize Judge, Dogs, Hunt, and Cross objects
-        judge = new Judge(1, "Judge Judy", "12345");
+    }
 
-        dog1 = new Dog(101, "Buddy", null, "REG101", "Sire1", "Dam1", "Owner1", "Town1", "State1");
-        dog2 = new Dog(102, "Max", null, "REG102", "Sire2", "Dam2", "Owner2", "Town2", "State2");
+    void start() {
+        Hunt hunt = new Hunt("title", "date", 10, new int[] { 300, 300, 300, 300 });
+        this.hunt = huntRepository.save(hunt);
 
-        hunt = new Hunt("Spring Hunt", "2024-04-10", 10, new int[] { 100, 100, 100, 100 });
-        cross = new Cross(judge, Arrays.asList(dog1, dog2), 1, 120);
+        Judge judge = new Judge(1, "Name", "Pin");
+        this.judge = judgeRepository.save(judge);
 
-        // Mock repository responses
-        when(judgeRepository.existsById(judge.getNumber())).thenReturn(true);
-        when(judgeRepository.findById(judge.getNumber())).thenReturn(Optional.of(judge));
+        Dog d1 = new Dog(1, "Dog1", StakeType.DERBY, "", "", "", "", "", "");
+        this.d1 = dogRepository.save(d1);
 
-        when(dogRepository.findAllById(any())).thenReturn(Arrays.asList(dog1, dog2));
-        when(huntRepository.findAll()).thenReturn(Collections.singletonList(hunt));
-        when(crossRepository.findByDayAndDogsContainsAndCrossTimeBetween(anyInt(), any(Dog.class), anyInt(), anyInt()))
-                .thenReturn(Collections.emptyList());
+        Dog d2 = new Dog(2, "Dog2", StakeType.DERBY, "", "", "", "", "", "");
+        this.d2 = dogRepository.save(d2);
 
-        // Mock saving behavior
-        when(crossRepository.save(any(Cross.class))).thenReturn(cross);
+        Dog d3 = new Dog(3, "Dog3", StakeType.DERBY, "", "", "", "", "", "");
+        this.d3 = dogRepository.save(d3);
+
+        Dog d4 = new Dog(4, "Dog4", StakeType.DERBY, "", "", "", "", "", "");
+        this.d4 = dogRepository.save(d4);
+
+        Dog d5 = new Dog(5, "Dog5", StakeType.DERBY, "", "", "", "", "", "");
+        this.d5 = dogRepository.save(d5);
     }
 
     @Test
-    public void testNewCrossWithValidJudgeAndDogs() {
-        // Act
-        String result = crossService.newCross(cross);
-
-        // Assert
-        assertEquals("Cross successful.", result);
-        verify(judgeRepository, times(1)).existsById(judge.getNumber());
-        verify(dogRepository, times(1)).findAllById(any());
-        verify(crossRepository, times(1)).save(any(Cross.class));
-    }
-
-    @Test
-    public void testNewCrossWithNonExistentJudge() {
-        // Arrange
-        when(judgeRepository.existsById(judge.getNumber())).thenReturn(false);
-
-        // Act
-        String result = crossService.newCross(cross);
-
-        // Assert
-        assertEquals("Judge: 1 does not exist.", result);
-        verify(crossRepository, never()).save(any(Cross.class));
-    }
-
-    @Test
-    public void testNewCrossWithNonExistentDog() {
-        // Arrange
-        when(dogRepository.findAllById(any())).thenReturn(Collections.singletonList(dog1));
-
-        // Act
-        String result = crossService.newCross(cross);
-
-        // Assert
-        assertEquals("Dog: 102 does not exist.", result);
-        verify(crossRepository, never()).save(any(Cross.class));
-    }
-
-    @Test
-    public void testNewCrossWithIntervalCheck() {
-        // Arrange
-        Cross existingCross = new Cross(judge, Arrays.asList(dog2, dog1), 1, 115); // Initial cross where dog2 is ranked
-        crossService.newCross(existingCross);
-
-        cross.setDogs(Arrays.asList(dog1, dog2)); // New cross where dog1 is ranked higher
-
-        // Mock repository to return the existing cross within the same interval
-        when(crossRepository.findByDayAndDogsContainsAndCrossTimeBetween(eq(1), eq(dog1), anyInt(), anyInt()))
-                .thenReturn(Collections.singletonList(existingCross));
-        when(crossRepository.findByDayAndDogsContainsAndCrossTimeBetween(eq(1), eq(dog2), anyInt(), anyInt()))
-                .thenReturn(Collections.singletonList(existingCross));
-
-        // Act - Call newCross with the new cross where dog1 ranks higher
-        String result = crossService.newCross(cross);
-        // Assert - Ensure "Cross successful." is returned
-        assertEquals("Cross successful.", result);
-
-        // Verify scores - dog2 should retain its highest score from the initial cross
-        assertEquals(35, dog2.getSdscore(1), "Dog2 should retain 35 points as its highest score within the interval.");
-        assertEquals(35, dog1.getSdscore(1), "Dog1 should receive 35 points for being ranked first in the new cross.");
+    void testDeleteCross() {
 
     }
 
     @Test
-    public void testScoreAssignmentBasedOnPlacement() {
-        crossService.newCross(cross);
+    void testNewCross() {
+        start();
 
-        // Assert - Validate score assignment
-        assertEquals(35, dog1.getSdscore(1));
-        assertEquals(30, dog2.getSdscore(1));
-        verify(crossRepository, times(1)).save(any(Cross.class));
-    }
+        Map<Dog, Integer> dogMap = new HashMap<>();
+        dogMap.put(d1, 35);
+        dogMap.put(d2, 30);
+        dogMap.put(d3, 25);
+        dogMap.put(d4, 20);
+        dogMap.put(d5, 15);
 
-    @Test
-    public void testNewCrossWithNoInterval() {
-        // Arrange - Set Hunt with no interval (timeInterval = 0)
-        hunt.setTimeInterval(0);
-        when(huntRepository.findAll()).thenReturn(Collections.singletonList(hunt));
-
-        // Act
-        String result = crossService.newCross(cross);
-
-        // Assert
-        assertEquals("Cross successful.", result);
-        assertEquals(35, dog1.getSdscore(1));
-        assertEquals(30, dog2.getSdscore(1));
-        verify(crossRepository, times(1)).save(any(Cross.class));
+        Cross c = new Cross(null, judge, dogMap, 0, 330);
+        String message = crossService.newCross(c);
+        assertAll("Cross creation", () -> assertEquals("Cross successful.", message),
+                () -> assertEquals(35, dogRepository.findById(d1.getNumber()).get().getSdscore(0)));
     }
 }

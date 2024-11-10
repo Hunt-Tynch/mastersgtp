@@ -1,17 +1,24 @@
-import axios from 'axios'
+import axios from 'axios';
 
-const BASE_URL = "http://localhost:8080/api/cross"
+const BASE_URL = "http://localhost:8080/api/cross";
 
-export const getCrossByJudge = (id) => axios.get(`${BASE_URL}/judge/${id}`)
+// Define headers configuration
+const config = {
+    headers: {
+        'Content-Type': 'application/json'
+    }
+};
 
-export const getCrossByDog = (id) => axios.get(`${BASE_URL}/dog/${id}`)
+export const getCrossByJudge = (id) => axios.get(`${BASE_URL}/judge/${id}`, config);
 
-export const postCross = (cross) => axios.post(BASE_URL, cross)
+export const getCrossByDog = (id) => axios.get(`${BASE_URL}/dog/${id}`, config);
 
-export const deleteCross = (id) => axios.delete(`${BASE_URL}/${id}`)
+export const postCross = (cross) => axios.post(BASE_URL, cross, config);
 
-export const putCross = (id, cross) => axios.put(`${BASE_URL}/${id}`, cross)
+export const deleteCross = (id) => axios.delete(`${BASE_URL}/${id}`, config);
 
-export const getAllCrossForDay = (day) => axios.get(`${BASE_URL}/day/${day}`)
+export const putCross = (id, cross) => axios.put(`${BASE_URL}/${id}`, cross, config);
 
-export const getAllCrossForDogAndDay = (day, number) => axios.get(`${BASE_URL}/day/${day}/dog/${number}`)
+export const getAllCrossForDay = (day) => axios.get(`${BASE_URL}/day/${day}`, config);
+
+export const getAllCrossForDogAndDay = (day, number) => axios.get(`${BASE_URL}/day/${day}/dog/${number}`, config);

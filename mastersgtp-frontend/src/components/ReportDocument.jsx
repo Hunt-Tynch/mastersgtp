@@ -11,7 +11,7 @@ const ReportDocument = ({ title, reportData, isLandscape, isScratchReport, isCro
             {isScratchReport ? (
                 <ScratchReport reportData={reportData} />
             ) : isCrossReport ? (
-                <CrossReport dogNumber={dogNumber} day={day} />
+                <CrossReport  day={day} dogNumber={dogNumber} />
             ) : (
                 <GenericReport reportData={reportData} />
             )}

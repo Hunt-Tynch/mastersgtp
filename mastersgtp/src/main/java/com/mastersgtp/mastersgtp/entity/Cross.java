@@ -1,17 +1,23 @@
 package com.mastersgtp.mastersgtp.entity;
 
-import java.util.List;
+import java.util.Map;
 
-import jakarta.persistence.CascadeType;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.mastersgtp.mastersgtp.DogPointsDeserializer;
+import com.mastersgtp.mastersgtp.DogPointsSerializer;
+
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OrderColumn;
+import jakarta.persistence.MapKeyJoinColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,15 +40,19 @@ public class Cross {
     @JoinColumn(name = "judge_number")
     private Judge judge;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @OrderColumn(name = "dog_order")
-    private List<Dog> dogs;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "cross_dogs", joinColumns = @JoinColumn(name = "cross_id"))
+    @MapKeyJoinColumn(name = "dog_number")
+    @Column(name = "points")
+    @JsonSerialize(using = DogPointsSerializer.class)
+    @JsonDeserialize(using = DogPointsDeserializer.class)
+    private Map<Dog, Integer> dogs;
 
     private int day;
 
     private int crossTime;
 
-    public Cross(Judge judge, List<Dog> dogs, int day, int time) {
+    public Cross(Judge judge, Map<Dog, Integer> dogs, int day, int time) {
         this(null, judge, dogs, day, time);
     }
 

@@ -1,7 +1,10 @@
 package com.mastersgtp.mastersgtp.entity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -42,15 +45,17 @@ public class Dog {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @OrderColumn(name = "score_order")
-    private List<Score> scores = new ArrayList<Score>();
+    private final List<Score> scores = new ArrayList<Score>();
 
     private int total;
 
     private boolean scratched = false;
 
+    private final Set<Long> dupScores = new HashSet<Long>();
+
     public Dog(int number, String name, StakeType stake, String regNumber, String sire, String dam, String owner,
             String ownerTown, String ownerState) {
-        this(number, name, stake, regNumber, sire, dam, owner, ownerTown, ownerState, new ArrayList<Score>(), 0, false);
+        this(number, name, stake, regNumber, sire, dam, owner, ownerTown, ownerState, 0, false);
         scores.add(new Score(null, 0, 0, 0));
         scores.add(new Score(null, 0, 0, 1));
         scores.add(new Score(null, 0, 0, 2));
@@ -58,11 +63,11 @@ public class Dog {
     }
 
     public void place(int index, int points) {
-        scores.get(index).place(index, points, this);
+        scores.get(index).place(points, this);
     }
 
     public void deletePlace(int index, int points) {
-        scores.get(index).deletePlace(index, points, this);
+        scores.get(index).deletePlace(points, this);
     }
 
     public int getSdscores() {
@@ -89,4 +94,18 @@ public class Dog {
         return scores.get(index).getEscore();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof Dog))
+            return false;
+        Dog dog = (Dog) o;
+        return number == dog.number;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(number);
+    }
 }

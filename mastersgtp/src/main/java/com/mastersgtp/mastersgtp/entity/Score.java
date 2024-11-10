@@ -26,18 +26,18 @@ public class Score {
 
     private int day;
 
-    public void place(int index, int points, Dog d) {
+    public void place(int points, Dog d) {
 
         sdscore += points;
         double change = 0;
         if (sdscore >= 60) {
-            change = ((.1 * (index + 1)) * sdscore) - escore;
+            change = ((.1 * (day + 1)) * sdscore) - escore;
             escore += change;
         }
-        d.setTotal(d.getTotal() + points + (int) change);
+        d.setTotal(sdscore + escore);
     }
 
-    public void deletePlace(int index, int points, Dog d) {
+    public void deletePlace(int points, Dog d) {
         sdscore -= points;
         double change = 0;
         if (sdscore < 60) {
@@ -45,10 +45,10 @@ public class Score {
                 escore = 0;
             }
         } else {
-            change = ((.1 * (index + 1)) * sdscore) - escore;
+            change = ((.1 * (day + 1)) * sdscore) - escore;
             escore += change;
         }
-        d.setTotal(d.getTotal() - (points + ((int) Math.abs(change))));
+        d.setTotal(sdscore + escore);
     }
 
 }

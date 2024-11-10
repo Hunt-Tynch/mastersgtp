@@ -44,7 +44,7 @@ public class CrossController {
         return crossService.getAllCrossesForDay(day);
     }
 
-    @PostMapping
+    @PostMapping()
     public String createCross(@RequestBody Cross cross) {
         return crossService.newCross(cross);
     }

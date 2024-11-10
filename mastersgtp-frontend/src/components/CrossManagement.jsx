@@ -4,7 +4,7 @@ import { deleteCross, getAllCrossForDay, getCrossByDog, getCrossByJudge, postCro
 
 const CrossManagement = () => {
     const [crosses, setCrosses] = useState([]);
-    const [newCross, setNewCross] = useState({ judgeNumber: '', dogNumbers: '', day: '', crossTime: '' });
+    const [newCross, setNewCross] = useState({ judgeNumber: '', dogPoints: '', day: '', crossTime: '' });
     const [editMode, setEditMode] = useState(false);
     const [editCrossId, setEditCrossId] = useState(null);
     const [selectedDay, setSelectedDay] = useState('');
@@ -18,6 +18,7 @@ const CrossManagement = () => {
     const loadCrossesForDay = async (day) => {
         try {
             const response = await getAllCrossForDay(day);
+            console.log(response.data)
             setCrosses(response.data);
         } catch (error) {
             console.error("Error loading crosses for the selected day:", error);
@@ -29,7 +30,6 @@ const CrossManagement = () => {
         setNewCross({ ...newCross, [name]: value });
     };
 
-    // Convert HH:MM format to minutes
     const timeToMinutes = (time) => {
         const [hours, minutes] = time.split(':').map(Number);
         return hours * 60 + minutes;
@@ -37,11 +37,21 @@ const CrossManagement = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Parsing dogPoints input into array format
+        const dogPointsMap = newCross.dogPoints.split(',').reduce((acc, entry) => {
+            const [dogNumber, points] = entry.split(':').map(str => str.trim());
+            if (dogNumber && points) {
+                acc.push([{ number: parseInt(dogNumber) }, parseInt(points)]); // Each entry as [Dog, points]
+            }
+            return acc;
+        }, []);
+        
         const crossData = {
-            judge: { number: newCross.judgeNumber },
-            dogs: newCross.dogNumbers.split(',').map(number => ({ number: parseInt(number.trim()) })),
+            judge: { number: parseInt(newCross.judgeNumber) },
+            dogs: dogPointsMap,
             day: parseInt(newCross.day),
-            crossTime: timeToMinutes(newCross.crossTime)
+            crossTime: timeToMinutes(newCross.crossTime),
         };
 
         try {
@@ -52,7 +62,7 @@ const CrossManagement = () => {
                 await postCross(crossData);
                 alert("Cross added successfully!");
             }
-            setNewCross({ judgeNumber: '', dogNumbers: '', day: '', crossTime: '' });
+            setNewCross({ judgeNumber: '', dogPoints: '', day: '', crossTime: '' });
             setEditMode(false);
             setEditCrossId(null);
             if (selectedDay) {
@@ -66,9 +76,14 @@ const CrossManagement = () => {
     const handleEdit = (cross) => {
         setEditMode(true);
         setEditCrossId(cross.id);
+
+        const dogPointsString = cross.dogs
+            .map(({ key, value }) => `${key.number}:${value}`)
+            .join(', ');
+
         setNewCross({
             judgeNumber: cross.judge.number,
-            dogNumbers: cross.dogs.map(dog => dog.number).join(', '),
+            dogPoints: dogPointsString,
             day: cross.day,
             crossTime: `${String(Math.floor(cross.crossTime / 60)).padStart(2, '0')}:${String(cross.crossTime % 60).padStart(2, '0')}`
         });
@@ -110,7 +125,6 @@ const CrossManagement = () => {
         <Container fluid className="py-4" style={{ backgroundColor: '#f8f9fa', borderRadius: '10px', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)', maxWidth: '1000px' }}>
             <h2 className="text-center mb-4">Cross Management</h2>
 
-            {/* Cross List */}
             <div className="p-3" style={{ overflowY: 'auto', maxHeight: '50vh' }}>
                 <Table striped bordered hover responsive>
                     <thead>
@@ -126,7 +140,7 @@ const CrossManagement = () => {
                         {crosses.map((cross) => (
                             <tr key={cross.id}>
                                 <td>{cross.judge.number}</td>
-                                <td>{cross.dogs.map(dog => dog.number).join(', ')}</td>
+                                <td>{cross.dogs.map((entry) => `${entry.dog.number}`).join(', ')}</td>
                                 <td>{cross.day}</td>
                                 <td>{`${String(Math.floor(cross.crossTime / 60)).padStart(2, '0')}:${String(cross.crossTime % 60).padStart(2, '0')}`}</td>
                                 <td>
@@ -153,7 +167,6 @@ const CrossManagement = () => {
                 </Table>
             </div>
 
-            {/* Add/Edit Cross Form */}
             <div className="p-3 mt-4" style={{ backgroundColor: '#e9ecef', borderRadius: '10px' }}>
                 <h4 className="text-center mb-3">{editMode ? "Edit Cross" : "Add New Cross"}</h4>
                 <Form onSubmit={handleSubmit}>
@@ -174,15 +187,15 @@ const CrossManagement = () => {
                     </Row>
                     <Row className="align-items-center mb-3">
                         <Col xs={4} md={2}>
-                            <Form.Label>Dog Numbers:</Form.Label>
+                            <Form.Label>Dog Numbers and Points:</Form.Label>
                         </Col>
                         <Col xs={8} md={10}>
                             <Form.Control
                                 type="text"
-                                name="dogNumbers"
-                                value={newCross.dogNumbers}
+                                name="dogPoints"
+                                value={newCross.dogPoints}
                                 onChange={handleInputChange}
-                                placeholder="Enter Dog Numbers (comma-separated)"
+                                placeholder="Enter Dog Numbers and Points (e.g., 1:10, 2:15)"
                                 required
                             />
                         </Col>
@@ -229,7 +242,6 @@ const CrossManagement = () => {
                 </Form>
             </div>
 
-            {/* Filter Section */}
             <div className="d-flex justify-content-around mt-4">
                 <Form.Control
                     type="number"

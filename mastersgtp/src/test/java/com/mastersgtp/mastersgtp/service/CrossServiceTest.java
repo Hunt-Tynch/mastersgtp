@@ -41,6 +41,7 @@ public class CrossServiceTest {
     @Autowired
     private CrossRepository crossRepository;
 
+    @SuppressWarnings("unused")
     private Hunt hunt;
 
     private Judge judge;
@@ -57,6 +58,7 @@ public class CrossServiceTest {
 
     @BeforeEach
     void setUp() throws Exception {
+        crossRepository.clearCrossDogs();
         crossRepository.deleteAll();
         dogRepository.deleteAll();
         judgeRepository.deleteAll();
@@ -88,7 +90,21 @@ public class CrossServiceTest {
 
     @Test
     void testDeleteCross() {
+        start();
 
+        Map<Dog, Integer> dogMap = new HashMap<>();
+        dogMap.put(d1, 35);
+        dogMap.put(d2, 30);
+        dogMap.put(d3, 25);
+        dogMap.put(d4, 20);
+        dogMap.put(d5, 15);
+
+        Cross c = new Cross(null, judge, dogMap, 0, 330);
+        String message = crossService.newCross(c);
+        assertAll("Cross creation", () -> assertEquals("Cross successful.", message),
+                () -> assertEquals(35, dogRepository.findById(d1.getNumber()).get().getSdscore(0)));
+
+        crossService.deleteCross(crossRepository.findAll().get(0).getId());
     }
 
     @Test

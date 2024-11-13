@@ -23,6 +23,7 @@ public class HuntService {
 
     public Hunt newHunt(Hunt hunt) {
         scratchRepository.deleteAll();
+        crossRepository.clearCrossDogs();
         crossRepository.deleteAll();
         judgeRepository.deleteAll();
         dogRepository.deleteAll();

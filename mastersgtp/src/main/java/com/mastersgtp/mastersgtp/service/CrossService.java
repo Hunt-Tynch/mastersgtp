@@ -163,6 +163,8 @@ public class CrossService {
         } else {
             removeCrossWithInterval(cross, hunt);
         }
+        cross.setDogs(null);
+        crossRepository.save(cross);
         crossRepository.delete(cross);
     }
 

@@ -3,8 +3,10 @@ package com.mastersgtp.mastersgtp.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mastersgtp.mastersgtp.entity.Cross;
 import com.mastersgtp.mastersgtp.entity.Dog;
@@ -34,5 +36,11 @@ public interface CrossRepository extends JpaRepository<Cross, Long> {
     @Query("SELECT c FROM Cross c JOIN c.dogs d WHERE key(d) = :dog AND c.day = :day AND c.crossTime BETWEEN :start AND :end")
     List<Cross> findByDayAndDogInMapAndCrossTimeBetween(@Param("day") int day, @Param("dog") Dog dog,
             @Param("start") int start, @Param("end") int end);
+
+    // Custom method to clear cross_dogs join table
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM cross_dogs", nativeQuery = true)
+    void clearCrossDogs();
 
 }

@@ -2,7 +2,7 @@ services:
   mysql:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: my_secure_password   # Set the password directly here
+      MYSQL_ROOT_PASSWORD: my_secure_password
       MYSQL_DATABASE: mastersgtp?createDatabaseIfNotExist=true
       MYSQL_PASSWORD: my_secure_password
     volumes:
@@ -11,13 +11,13 @@ services:
       - "3307:3306"
     networks:
       - mastersgtp-network
-    pull_policy: never
+    pull_policy: missing
 
   backend:
     build:
       context: ./mastersgtp
       dockerfile: Dockerfile
-    image: mastersgtp-backend:latest
+    image: mastersgtp-backend-1
     ports:
       - "8080:8080"
     environment:
@@ -30,19 +30,19 @@ services:
     networks:
       - mastersgtp-network
     restart: unless-stopped
-    pull_policy: never
+    pull_policy: missing
 
   frontend:
     build:
       context: ./mastersgtp-frontend
       dockerfile: Dockerfile
-    image: mastersgtp-frontend:latest
+    image: mastersgtp-frontend-1
     ports:
       - "3000:3000"
     restart: unless-stopped
     networks:
       - mastersgtp-network
-    pull_policy: never
+    pull_policy: missing
 
 networks:
   mastersgtp-network:

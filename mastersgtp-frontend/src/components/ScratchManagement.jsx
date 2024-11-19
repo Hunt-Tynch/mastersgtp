@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Container, Form, OverlayTrigger, Row, Table, Tooltip } from 'react-bootstrap';
 import { createScratch, deleteScratch, getScratches } from '../service/ScratchService';
 
 const ScratchManagement = () => {
@@ -26,7 +25,7 @@ const ScratchManagement = () => {
     const fetchScratches = async () => {
         try {
             const response = await getScratches();
-            const formattedScratches = response.data.map(scratch => ({
+            const formattedScratches = response.data.map((scratch) => ({
                 ...scratch,
                 time: minutesToTime(scratch.time), // Convert time to HH:MM format for display
             }));
@@ -38,26 +37,25 @@ const ScratchManagement = () => {
 
     useEffect(() => {
         fetchScratches();
-    });
-
+    }, []);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        
+
         if (name === "judgeNumber") {
-            setNewScratch(prevState => ({
+            setNewScratch((prevState) => ({
                 ...prevState,
-                judge: { ...prevState.judge, number: value }
+                judge: { ...prevState.judge, number: value },
             }));
         } else if (name === "dogNumber") {
-            setNewScratch(prevState => ({
+            setNewScratch((prevState) => ({
                 ...prevState,
-                dog: { ...prevState.dog, number: value }
+                dog: { ...prevState.dog, number: value },
             }));
         } else {
-            setNewScratch(prevState => ({
+            setNewScratch((prevState) => ({
                 ...prevState,
-                [name]: value
+                [name]: value,
             }));
         }
     };
@@ -89,105 +87,101 @@ const ScratchManagement = () => {
     };
 
     return (
-        <Container fluid className="py-4" style={{ backgroundColor: '#f8f9fa', borderRadius: '10px', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)', maxWidth: '800px' }}>
-            <h2 className="text-center mb-4">Scratch Management</h2>
+        <div className="p-6 bg-gray-100 rounded-lg shadow-lg max-w-5xl mx-auto text-black">
+            <h2 className="text-2xl font-bold text-center mb-6">Scratch Management</h2>
 
             {/* Scratch Form */}
-            <Form onSubmit={handleCreateScratch} className="p-3 mb-4" style={{ backgroundColor: '#e9ecef', borderRadius: '10px' }}>
-                <h4 className="text-center mb-3">Add New Scratch</h4>
-                <Row className="align-items-center mb-3">
-                    <Col xs={4}>
-                        <Form.Label>Judge Number:</Form.Label>
-                    </Col>
-                    <Col xs={8}>
-                        <Form.Control
+            <form onSubmit={handleCreateScratch} className="collapse collapse-arrow p-4 bg-white rounded-lg shadow mb-6">
+                <input type="checkbox"></input>
+                <h3 className="collapse-title font-bold text-lg mb-4 text-center">Add New Scratch</h3>
+                <div className="collapse-content grid grid-cols-2 gap-4">
+                    <div>
+                        <label className="block font-bold mb-2">Judge Number</label>
+                        <input
                             type="number"
                             name="judgeNumber"
                             value={newScratch.judge.number}
                             onChange={handleInputChange}
+                            className="input input-bordered w-full bg-white border-black"
                             placeholder="Judge Number"
                             required
                         />
-                    </Col>
-                </Row>
-                <Row className="align-items-center mb-3">
-                    <Col xs={4}>
-                        <Form.Label>Dog Number:</Form.Label>
-                    </Col>
-                    <Col xs={8}>
-                        <Form.Control
+                    </div>
+                    <div>
+                        <label className="block font-bold mb-2">Dog Number</label>
+                        <input
                             type="number"
                             name="dogNumber"
                             value={newScratch.dog.number}
                             onChange={handleInputChange}
+                            className="input input-bordered w-full bg-white border-black"
                             placeholder="Dog Number"
                             required
                         />
-                    </Col>
-                </Row>
-                <Row className="align-items-center mb-3">
-                    <Col xs={4}>
-                        <Form.Label>Reason:</Form.Label>
-                    </Col>
-                    <Col xs={8}>
-                        <Form.Control
+                    </div>
+                    <div>
+                        <label className="block font-bold mb-2">Reason</label>
+                        <input
                             type="text"
                             name="reason"
                             value={newScratch.reason}
                             onChange={handleInputChange}
+                            className="input input-bordered w-full bg-white border-black"
                             placeholder="Reason"
                             required
                         />
-                    </Col>
-                </Row>
-                <Row className="align-items-center mb-3">
-                    <Col xs={4}>
-                        <Form.Label>Time (HH:MM):</Form.Label>
-                    </Col>
-                    <Col xs={8}>
-                        <Form.Control
+                    </div>
+                    <div>
+                        <label className="block font-bold mb-2">Time (HH:MM)</label>
+                        <input
                             type="time"
                             name="time"
                             value={newScratch.time}
                             onChange={handleInputChange}
+                            className="input input-bordered w-full bg-white border-black"
                             required
                         />
-                    </Col>
-                </Row>
-                <Button type="submit" variant="primary" className="w-100">Add Scratch</Button>
-            </Form>
+                    </div>
+                    <button type="submit" className="btn col-span-2 btn-primary w-full mt-4">
+                    Add Scratch
+                </button>
+                </div>
+            </form>
 
             {/* Scratch List */}
-            <h4 className="text-center mb-3">Existing Scratches</h4>
-            <Table striped bordered hover responsive>
-                <thead>
-                    <tr>
-                        <th>Judge</th>
-                        <th>Dog</th>
-                        <th>Reason</th>
-                        <th>Time</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {scratches.map((scratch) => (
-                        <tr key={scratch.id}>
-                            <td>{scratch.judge.number}</td>
-                            <td>{scratch.dog.number}</td>
-                            <td>{scratch.reason}</td>
-                            <td>{scratch.time}</td>
-                            <td>
-                                <OverlayTrigger placement="top" overlay={<Tooltip>Delete Scratch</Tooltip>}>
-                                    <Button variant="danger" size="sm" onClick={() => handleDeleteScratch(scratch.id)}>
-                                        Delete
-                                    </Button>
-                                </OverlayTrigger>
-                            </td>
+            <h3 className="font-bold text-lg text-center mb-4">Existing Scratches</h3>
+            <div className="overflow-x-auto bg-gray-50 rounded-lg shadow">
+                <table className="table w-full">
+                    <thead>
+                        <tr>
+                            <th className="text-black">Judge</th>
+                            <th className="text-black">Dog</th>
+                            <th className="text-black">Reason</th>
+                            <th className="text-black">Time</th>
+                            <th className="text-black">Actions</th>
                         </tr>
-                    ))}
-                </tbody>
-            </Table>
-        </Container>
+                    </thead>
+                    <tbody>
+                        {scratches.map((scratch) => (
+                            <tr key={scratch.id}>
+                                <td>{scratch.judge.number}</td>
+                                <td>{scratch.dog.number}</td>
+                                <td>{scratch.reason}</td>
+                                <td>{scratch.time}</td>
+                                <td>
+                                    <button
+                                        className="btn btn-error btn-xs"
+                                        onClick={() => handleDeleteScratch(scratch.id)}
+                                    >
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     );
 };
 

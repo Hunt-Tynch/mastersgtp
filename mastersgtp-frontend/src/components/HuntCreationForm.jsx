@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Accordion, Button, Col, Container, Form, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { postHunt } from '../service/HuntService';
 
@@ -31,7 +30,7 @@ const HuntCreationForm = () => {
                 timeToMinutes(startTimes.dayOne),
                 timeToMinutes(startTimes.dayTwo),
                 timeToMinutes(startTimes.dayThree),
-            ]
+            ],
         };
         try {
             await postHunt(huntData);
@@ -48,84 +47,77 @@ const HuntCreationForm = () => {
     };
 
     return (
-        <Container fluid className="p-4" style={{ backgroundColor: '#f8f9fa', maxWidth: '800px', borderRadius: '10px', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.5)' }}>
-            <h2 className="text-center mb-4" style={{ fontWeight: 'bold' }}>Create New Hunt</h2>
-            
-            <div className="p-4" style={{ backgroundColor: '#e9ecef', borderRadius: '8px' }}>
-                <Form onSubmit={handleSubmit}>
-                    {/* Title Input */}
-                    <Form.Group as={Row} className="mb-3" controlId="huntTitle">
-                        <Form.Label column sm="3" className="fw-bold d-flex">Title:</Form.Label>
-                        <Col sm="9">
-                            <Form.Control
-                                type="text"
-                                placeholder="Hunt Title"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                style={{ fontSize: '1.1rem' }}
-                            />
-                        </Col>
-                    </Form.Group>
+        <div className="p-6 bg-gray-100 rounded-lg shadow-lg max-w-3xl mx-auto">
+            <h2 className="text-center text-2xl font-bold mb-6 text-gray-800">Create New Hunt</h2>
 
-                    {/* Dates Held Input */}
-                    <Form.Group as={Row} className="mb-3" controlId="datesHeld">
-                        <Form.Label column sm="3" className="fw-bold d-flex">Dates Held:</Form.Label>
-                        <Col sm="9">
-                            <Form.Control
-                                type="text"
-                                placeholder="Dates"
-                                value={datesHeld}
-                                onChange={(e) => setDatesHeld(e.target.value)}
-                                style={{ fontSize: '1.1rem' }}
-                            />
-                        </Col>
-                    </Form.Group>
+            <form onSubmit={handleSubmit}>
+                {/* Title Input */}
+                <div className="mb-4">
+                    <label className="block font-semibold mb-2 text-gray-800">Title:</label>
+                    <input
+                        type="text"
+                        placeholder="Hunt Title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        className="input input-bordered w-full bg-white text-gray-900 border-gray-400 focus:outline-none focus:ring focus:ring-primary"
+                    />
+                </div>
 
-                    {/* Time Interval Input */}
-                    <Form.Group as={Row} className="mb-3" controlId="timeInterval">
-                        <Form.Label column sm="3" className="fw-bold d-flex">Time Interval:</Form.Label>
-                        <Col sm="9">
-                            <Form.Control
-                                type="number"
-                                placeholder="Time Interval"
-                                value={timeInterval}
-                                onChange={(e) => setTimeInterval(e.target.value)}
-                                style={{ fontSize: '1.1rem' }}
-                            />
-                        </Col>
-                    </Form.Group>
+                {/* Dates Held Input */}
+                <div className="mb-4">
+                    <label className="block font-semibold mb-2 text-gray-800">Dates Held:</label>
+                    <input
+                        type="text"
+                        placeholder="Dates"
+                        value={datesHeld}
+                        onChange={(e) => setDatesHeld(e.target.value)}
+                        className="input input-bordered w-full bg-white text-gray-900 border-gray-400 focus:outline-none focus:ring focus:ring-primary"
+                    />
+                </div>
 
-                    {/* Start Times Section */}
-                    <Accordion className="mt-4">
-                        <Accordion.Item eventKey="0">
-                            <Accordion.Header>Start Times</Accordion.Header>
-                            <Accordion.Body className="p-3" style={{ borderRadius: '8px' }}>
-                                <Row className="text-center">
-                                    {['dayZero', 'dayOne', 'dayTwo', 'dayThree'].map((day, index) => (
-                                        <Col key={index} xs={6} md={3} className="mb-3">
-                                            <h6 className="">{`Day ${index}`}</h6>
-                                            <Form.Control
-                                                type="time"
-                                                value={startTimes[day]}
-                                                onChange={(e) =>
-                                                    setStartTimes({ ...startTimes, [day]: e.target.value })
-                                                }
-                                                style={{ textAlign: 'center' }}
-                                            />
-                                        </Col>
-                                    ))}
-                                </Row>
-                            </Accordion.Body>
-                        </Accordion.Item>
-                    </Accordion>
+                {/* Time Interval Input */}
+                <div className="mb-4">
+                    <label className="block font-semibold mb-2 text-gray-800">Time Interval:</label>
+                    <input
+                        type="number"
+                        placeholder="Time Interval (minutes)"
+                        value={timeInterval}
+                        onChange={(e) => setTimeInterval(e.target.value)}
+                        className="input input-bordered w-full bg-white text-gray-900 border-gray-400 focus:outline-none focus:ring focus:ring-primary"
+                    />
+                </div>
 
-                    {/* Submit Button */}
-                    <Button type="submit" variant="primary" className="mt-4 w-100" style={{ fontSize: '1.25rem' }}>
-                        Create Hunt
-                    </Button>
-                </Form>
-            </div>
-        </Container>
+                {/* Start Times Section */}
+                <div tabIndex={0} className="collapse collapse-arrow bg-gray-200 rounded-lg">
+                    <input type="checkbox" className="peer" />
+                    <div className="collapse-title font-semibold peer-checked:bg-gray-300 text-gray-800">
+                        Start Times
+                    </div>
+                    <div className="collapse-content bg-gray-25 peer-checked:block p-4 rounded-lg">
+                        <div className="grid grid-cols-2 gap-4">
+                            {['dayZero', 'dayOne', 'dayTwo', 'dayThree'].map((day, index) => (
+                                <div key={index} className="flex flex-col items-center">
+                                    <label className="font-semibold mb-2 text-gray-800">{`Day ${index}`}</label>
+                                    <input
+                                        type="time"
+                                        value={startTimes[day]}
+                                        onChange={(e) =>
+                                            setStartTimes({ ...startTimes, [day]: e.target.value })
+                                        }
+                                        className="input input-bordered text-center w-full bg-white text-gray-900 border-gray-400 focus:outline-none focus:ring focus:ring-primary"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Submit Button */}
+                <button type="submit" className="btn btn-primary w-full mt-6">
+                    Create Hunt
+                </button>
+            </form>
+        </div>
     );
 };
 

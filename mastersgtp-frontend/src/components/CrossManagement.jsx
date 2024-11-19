@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Container, Form, OverlayTrigger, Row, Table, Tooltip } from 'react-bootstrap';
 import { deleteCross, getAllCrossForDay, getCrossByDog, getCrossByJudge, postCross, putCross } from '../service/CrossService';
 
 const CrossManagement = () => {
@@ -18,7 +17,6 @@ const CrossManagement = () => {
     const loadCrossesForDay = async (day) => {
         try {
             const response = await getAllCrossForDay(day);
-            console.log(response.data)
             setCrosses(response.data);
         } catch (error) {
             console.error("Error loading crosses for the selected day:", error);
@@ -38,11 +36,10 @@ const CrossManagement = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Parsing dogPoints input into array format
         const dogPointsMap = newCross.dogPoints.split(',').reduce((acc, entry) => {
             const [dogNumber, points] = entry.split(':').map(str => str.trim());
             if (dogNumber && points) {
-                acc.push([{ number: parseInt(dogNumber) }, parseInt(points)]); // Each entry as [Dog, points]
+                acc.push([{ number: parseInt(dogNumber) }, parseInt(points)]);
             }
             return acc;
         }, []);
@@ -78,7 +75,7 @@ const CrossManagement = () => {
         setEditCrossId(cross.id);
 
         const dogPointsString = cross.dogs
-            .map(({ key, value }) => `${key.number}:${value}`)
+            .map((entry) => `${entry.dog.number}:${entry.points}`)
             .join(', ');
 
         setNewCross({
@@ -122,18 +119,100 @@ const CrossManagement = () => {
     };
 
     return (
-        <Container fluid className="py-4" style={{ backgroundColor: '#f8f9fa', borderRadius: '10px', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)', maxWidth: '1000px' }}>
-            <h2 className="text-center mb-4">Cross Management</h2>
+        <div className="p-6 bg-gray-100 rounded-lg shadow-lg max-w-6xl mx-auto text-black">
+            <h2 className="text-2xl font-bold text-center mb-6">Cross Management</h2>
 
-            <div className="p-3" style={{ overflowY: 'auto', maxHeight: '50vh' }}>
-                <Table striped bordered hover responsive>
+            <form onSubmit={handleSubmit} className="collapse collapse-arrow p-4 bg-white rounded-lg shadow mb-6">
+                <input type="checkbox"></input>
+                <h3 className="collapse-title font-bold text-lg mb-4">Add Cross</h3>
+                <div className="collapse-content grid grid-cols-1 gap-4">
+                    <div>
+                        <label className="block font-bold mb-2">Judge Number:</label>
+                        <input
+                            type="text"
+                            name="judgeNumber"
+                            value={newCross.judgeNumber}
+                            onChange={handleInputChange}
+                            placeholder="Enter Judge Number"
+                            className="input input-bordered w-full bg-white"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block font-bold mb-2">Dog Numbers and Points:</label>
+                        <input
+                            type="text"
+                            name="dogPoints"
+                            value={newCross.dogPoints}
+                            onChange={handleInputChange}
+                            placeholder="Enter Dog Numbers and Points (e.g., 1:10, 2:15)"
+                            className="input input-bordered w-full bg-white"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block font-bold mb-2">Day:</label>
+                        <input
+                            type="number"
+                            name="day"
+                            min={0}
+                            max={3}
+                            value={newCross.day}
+                            onChange={handleInputChange}
+                            placeholder="Enter Day"
+                            className="input input-bordered w-full bg-white"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block font-bold mb-2">Cross Time:</label>
+                        <input
+                            type="time"
+                            name="crossTime"
+                            value={newCross.crossTime}
+                            onChange={handleInputChange}
+                            className="input input-bordered w-full bg-white"
+                            required
+                        />
+                    </div>
+                    <button type="submit" className="btn btn-primary w-full mt-4">
+                    {editMode ? "Update Cross" : "Add Cross"}
+                </button>
+                </div>
+            </form>
+
+            <div className="flex justify-between">
+                <input
+                    type="number"
+                    placeholder="Filter by Day"
+                    min={0}
+                    max={3}
+                    onChange={(e) => setSelectedDay(e.target.value)}
+                    className="input input-bordered w-1/4 bg-white"
+                />
+                <input
+                    type="text"
+                    placeholder="Filter by Judge Number"
+                    onChange={(e) => handleFilterByJudge(e.target.value)}
+                    className="input input-bordered w-1/4 bg-white"
+                />
+                <input
+                    type="text"
+                    placeholder="Filter by Dog Number"
+                    onChange={(e) => handleFilterByDog(e.target.value)}
+                    className="input input-bordered w-1/4 bg-white"
+                />
+            </div>
+
+            <div className="overflow-x-auto mb-6">
+                <table className="table w-full">
                     <thead>
                         <tr>
-                            <th>Judge Number</th>
-                            <th>Dogs</th>
-                            <th>Day</th>
-                            <th>Cross Time (HH:MM)</th>
-                            <th>Actions</th>
+                            <th className="text-black">Judge Number</th>
+                            <th className="text-black">Dogs</th>
+                            <th className="text-black">Day</th>
+                            <th className="text-black">Cross Time (HH:MM)</th>
+                            <th className="text-black">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -144,127 +223,25 @@ const CrossManagement = () => {
                                 <td>{cross.day}</td>
                                 <td>{`${String(Math.floor(cross.crossTime / 60)).padStart(2, '0')}:${String(cross.crossTime % 60).padStart(2, '0')}`}</td>
                                 <td>
-                                    <OverlayTrigger
-                                        placement="top"
-                                        overlay={<Tooltip>Edit Cross</Tooltip>}
+                                    <button
+                                        className="btn btn-warning btn-xs mr-2"
+                                        onClick={() => handleEdit(cross)}
                                     >
-                                        <Button variant="warning" size="sm" onClick={() => handleEdit(cross)} className="me-2">
-                                            Edit
-                                        </Button>
-                                    </OverlayTrigger>
-                                    <OverlayTrigger
-                                        placement="top"
-                                        overlay={<Tooltip>Delete Cross</Tooltip>}
+                                        Edit
+                                    </button>
+                                    <button
+                                        className="btn btn-error btn-xs"
+                                        onClick={() => handleDelete(cross.id)}
                                     >
-                                        <Button variant="danger" size="sm" onClick={() => handleDelete(cross.id)}>
-                                            Delete
-                                        </Button>
-                                    </OverlayTrigger>
+                                        Delete
+                                    </button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
-                </Table>
+                </table>
             </div>
-
-            <div className="p-3 mt-4" style={{ backgroundColor: '#e9ecef', borderRadius: '10px' }}>
-                <h4 className="text-center mb-3">{editMode ? "Edit Cross" : "Add New Cross"}</h4>
-                <Form onSubmit={handleSubmit}>
-                    <Row className="align-items-center mb-3">
-                        <Col xs={4} md={2}>
-                            <Form.Label>Judge Number:</Form.Label>
-                        </Col>
-                        <Col xs={8} md={10}>
-                            <Form.Control
-                                type="text"
-                                name="judgeNumber"
-                                value={newCross.judgeNumber}
-                                onChange={handleInputChange}
-                                placeholder="Enter Judge Number"
-                                required
-                            />
-                        </Col>
-                    </Row>
-                    <Row className="align-items-center mb-3">
-                        <Col xs={4} md={2}>
-                            <Form.Label>Dog Numbers and Points:</Form.Label>
-                        </Col>
-                        <Col xs={8} md={10}>
-                            <Form.Control
-                                type="text"
-                                name="dogPoints"
-                                value={newCross.dogPoints}
-                                onChange={handleInputChange}
-                                placeholder="Enter Dog Numbers and Points (e.g., 1:10, 2:15)"
-                                required
-                            />
-                        </Col>
-                    </Row>
-                    <Row className="align-items-center mb-3">
-                        <Col xs={4} md={2}>
-                            <Form.Label>Day:</Form.Label>
-                        </Col>
-                        <Col xs={8} md={10}>
-                            <OverlayTrigger
-                                placement='top'
-                                overlay={<Tooltip>Days are 0 indexed. <br/> 1st Day = Day 0</Tooltip>}
-                            >
-                                <Form.Control
-                                    type="number"
-                                    name="day"
-                                    min={0}
-                                    max={3}
-                                    value={newCross.day}
-                                    onChange={handleInputChange}
-                                    placeholder="Enter Day"
-                                    required
-                                />
-                            </OverlayTrigger>
-                        </Col>
-                    </Row>
-                    <Row className="align-items-center mb-3">
-                        <Col xs={4} md={2}>
-                            <Form.Label>Cross Time:</Form.Label>
-                        </Col>
-                        <Col xs={8} md={10}>
-                            <Form.Control
-                                type="time"
-                                name="crossTime"
-                                value={newCross.crossTime}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </Col>
-                    </Row>
-                    <Button type="submit" variant="primary" className="w-100">
-                        {editMode ? "Update Cross" : "Add Cross"}
-                    </Button>
-                </Form>
-            </div>
-
-            <div className="d-flex justify-content-around mt-4">
-                <Form.Control
-                    type="number"
-                    placeholder="Filter by Day"
-                    min={0}
-                    max={3}
-                    onChange={(e) => setSelectedDay(e.target.value)}
-                    style={{ maxWidth: '200px' }}
-                />
-                <Form.Control
-                    type="text"
-                    placeholder="Filter by Judge Number"
-                    onChange={(e) => handleFilterByJudge(e.target.value)}
-                    style={{ maxWidth: '200px' }}
-                />
-                <Form.Control
-                    type="text"
-                    placeholder="Filter by Dog Number"
-                    onChange={(e) => handleFilterByDog(e.target.value)}
-                    style={{ maxWidth: '200px' }}
-                />
-            </div>
-        </Container>
+        </div>
     );
 };
 

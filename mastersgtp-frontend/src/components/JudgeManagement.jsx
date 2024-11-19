@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Container, Form, OverlayTrigger, Row, Table, Tooltip } from 'react-bootstrap';
 import { deleteJudge, getJudges, postJudge, putJudge } from '../service/JudgeService';
 
 const JudgeManagement = () => {
@@ -64,18 +63,66 @@ const JudgeManagement = () => {
     };
 
     return (
-        <Container className="py-4" fluid style={{ backgroundColor: '#f8f9fa', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)', borderRadius: '10px', maxWidth: '800px' }}>
-            <h2 className="text-center mb-4">Judge Management</h2>
-            
+        <div className="p-6 bg-gray-100 rounded-lg shadow-lg max-w-4xl mx-auto text-black">
+            <h2 className="text-2xl font-bold text-center mb-6">Judge Management</h2>
+
+            {/* Add/Edit Judge Form */}
+            <form onSubmit={handleSubmit} className="collapse collapse-arrow p-4 bg-white rounded-lg shadow">
+                <input type="checkbox"></input>
+                <h4 className="collapse-title text-center font-bold mb-4">{editMode ? "Edit Judge" : "Add New Judge"}</h4>
+                <div className="collapse-content grid grid-cols-1 gap-4">
+                    <div>
+                        <label className="block font-bold mb-2">Number:</label>
+                        <input
+                            type="number"
+                            name="number"
+                            value={newJudge.number}
+                            onChange={handleInputChange}
+                            placeholder="Judge Number"
+                            className="input input-bordered w-full bg-white border-black"
+                            required
+                            readOnly={editMode}
+                        />
+                    </div>
+                    <div>
+                        <label className="block font-bold mb-2">Name:</label>
+                        <input
+                            type="text"
+                            name="name"
+                            value={newJudge.name}
+                            onChange={handleInputChange}
+                            placeholder="Judge Name"
+                            className="input input-bordered w-full bg-white border-black"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block font-bold mb-2">PIN:</label>
+                        <input
+                            type="text"
+                            name="pin"
+                            value={newJudge.pin}
+                            onChange={handleInputChange}
+                            placeholder="Judge PIN"
+                            className="input input-bordered w-full bg-white border-black"
+                            required
+                        />
+                    </div>
+                    <button type="submit" className="btn btn-primary w-full mt-4">
+                    {editMode ? "Update Judge" : "Add Judge"}
+                </button>
+                </div>
+            </form>
+
             {/* Judge List */}
-            <div className="p-3" style={{ overflowY: 'auto', maxHeight: '50vh' }}>
-                <Table striped bordered hover responsive>
+            <div className="overflow-x-auto mb-6">
+                <table className="table w-full">
                     <thead>
                         <tr>
-                            <th>Number</th>
-                            <th>Name</th>
-                            <th>PIN</th>
-                            <th>Actions</th>
+                            <th className="text-black">Number</th>
+                            <th className="text-black">Name</th>
+                            <th className="text-black">PIN</th>
+                            <th className="text-black">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,94 +132,27 @@ const JudgeManagement = () => {
                                 <td>{judge.name}</td>
                                 <td>{judge.pin}</td>
                                 <td>
-                                    <OverlayTrigger
-                                        placement="top"
-                                        overlay={<Tooltip id="tooltip-edit">Edit Judge</Tooltip>}
+                                    <button
+                                        className="btn btn-warning btn-xs mr-2"
+                                        onClick={() => handleEdit(judge)}
                                     >
-                                        <Button
-                                            variant="warning"
-                                            size="sm"
-                                            onClick={() => handleEdit(judge)}
-                                            className="me-2"
-                                        >
-                                            Edit
-                                        </Button>
-                                    </OverlayTrigger>
-                                    <OverlayTrigger
-                                        placement="top"
-                                        overlay={<Tooltip id="tooltip-delete">Delete Judge</Tooltip>}
+                                        Edit
+                                    </button>
+                                    <button
+                                        className="btn btn-error btn-xs"
+                                        onClick={() => handleDelete(judge.number)}
                                     >
-                                        <Button
-                                            variant="danger"
-                                            size="sm"
-                                            onClick={() => handleDelete(judge.number)}
-                                        >
-                                            Delete
-                                        </Button>
-                                    </OverlayTrigger>
+                                        Delete
+                                    </button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
-                </Table>
+                </table>
             </div>
 
-            {/* Add/Edit Judge Form */}
-            <div className="p-3 mt-4" style={{ backgroundColor: '#e9ecef', borderRadius: '10px' }}>
-                <h4 className="text-center mb-3">{editMode ? "Edit Judge" : "Add New Judge"}</h4>
-                <Form onSubmit={handleSubmit}>
-                    <Row className="align-items-center mb-3">
-                        <Col xs={4} md={2}>
-                            <Form.Label className="d-flex">Number:</Form.Label>
-                        </Col>
-                        <Col xs={8} md={10}>
-                            <Form.Control
-                                type="number"
-                                name="number"
-                                value={newJudge.number}
-                                onChange={handleInputChange}
-                                placeholder="Judge Number"
-                                required
-                                readOnly={editMode} 
-                            />
-                        </Col>
-                    </Row>
-                    <Row className="align-items-center mb-3">
-                        <Col xs={4} md={2}>
-                            <Form.Label className="d-flex">Name:</Form.Label>
-                        </Col>
-                        <Col xs={8} md={10}>
-                            <Form.Control
-                                type="text"
-                                name="name"
-                                value={newJudge.name}
-                                onChange={handleInputChange}
-                                placeholder="Judge Name"
-                                required
-                            />
-                        </Col>
-                    </Row>
-                    <Row className="align-items-center mb-3">
-                        <Col xs={4} md={2}>
-                            <Form.Label className="d-flex">PIN:</Form.Label>
-                        </Col>
-                        <Col xs={8} md={10}>
-                            <Form.Control
-                                type="text"
-                                name="pin"
-                                value={newJudge.pin}
-                                onChange={handleInputChange}
-                                placeholder="Judge PIN"
-                                required
-                            />
-                        </Col>
-                    </Row>
-                    <Button type="submit" variant="primary" className="w-100">
-                        {editMode ? "Update Judge" : "Add Judge"}
-                    </Button>
-                </Form>
-            </div>
-        </Container>
+            
+        </div>
     );
 };
 

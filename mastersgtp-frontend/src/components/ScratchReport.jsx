@@ -4,6 +4,7 @@ import { styles } from './styles';
 
 const ScratchReport = ({ reportData }) => (
     <View>
+        <Text style={styles.title}>Scratch Report</Text>
         <View style={styles.tableHeader}>
             <Text style={{ ...styles.columnHeader, width: '20%' }}>Dog Number</Text>
             <Text style={{ ...styles.columnHeader, width: '30%' }}>Judge Name</Text>

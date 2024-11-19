@@ -1,6 +1,4 @@
-// App.jsx
 import React from 'react';
-import { Container, Nav, Navbar } from 'react-bootstrap';
 import { NavLink, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
 import CrossManagement from './components/CrossManagement';
@@ -16,52 +14,90 @@ import SetStartTime from './components/SetStartTime';
 function App() {
     return (
         <Router>
-            <div className="App">
-                <Navbar bg="dark" variant="dark" expand="lg">
-                <Nav.Link 
-                            as={NavLink} 
-                            to="/" 
-                            className="nav-link" 
-                            style={({ isActive }) => ({ color: isActive ? 'white' : 'gray', fontSize: '1.3rem' , marginLeft: '15px', marginRight: '15px' })}
-                        >
-                            Hunt
-                        </Nav.Link>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="me-auto">
-                            <Nav.Link as={NavLink} to="/dogs" className="nav-link">
-                                Dogs
-                            </Nav.Link>
-                            <Nav.Link as={NavLink} to="/crosses" className="nav-link">
-                                Crosses
-                            </Nav.Link>
-                            <Nav.Link as={NavLink} to="/judges" className="nav-link">
-                                Judges
-                            </Nav.Link>
-                            <Nav.Link as={NavLink} to="/scratches" className="nav-link">
-                                Scratches
-                            </Nav.Link>
-                            <Nav.Link as={NavLink} to="/report" className="nav-link">
-                                Reports
-                            </Nav.Link>
-                        </Nav>
-                    </Navbar.Collapse>
-                </Navbar>
+            <div className="App bg-gray-100 min-h-screen">
+                {/* Navbar */}
+                <div className="navbar bg-neutral text-neutral-content">
+                    <div className="navbar-start">
+                        <ul className="menu menu-horizontal space-x-4">
+                            <li>
+                                <NavLink 
+                                    to="/" 
+                                    className={({ isActive }) => 
+                                        `btn btn-ghost normal-case text-md ${isActive ? 'text-white' : 'text-gray-400'}`
+                                    }
+                                >
+                                    Hunt
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink 
+                                    to="/dogs" 
+                                    className={({ isActive }) => 
+                                        `btn btn-ghost normal-case text-md ${isActive ? 'text-white' : 'text-gray-400'}`
+                                    }
+                                >
+                                    Dogs
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink 
+                                    to="/crosses" 
+                                    className={({ isActive }) => 
+                                        `btn btn-ghost normal-case text-md ${isActive ? 'text-white' : 'text-gray-400'}`
+                                    }
+                                >
+                                    Crosses
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink 
+                                    to="/judges" 
+                                    className={({ isActive }) => 
+                                        `btn btn-ghost normal-case text-md ${isActive ? 'text-white' : 'text-gray-400'}`
+                                    }
+                                >
+                                    Judges
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink 
+                                    to="/scratches" 
+                                    className={({ isActive }) => 
+                                        `btn btn-ghost normal-case text-md ${isActive ? 'text-white' : 'text-gray-400'}`
+                                    }
+                                >
+                                    Scratches
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink 
+                                    to="/report" 
+                                    className={({ isActive }) => 
+                                        `btn btn-ghost normal-case text-md ${isActive ? 'text-white' : 'text-gray-400'}`
+                                    }
+                                >
+                                    Reports
+                                </NavLink>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
 
-                <main className="mt-4">
-                    <Container>
+                {/* Main Content */}
+                <main className="p-4">
+                    <div className="container mx-auto bg-white p-6 rounded-lg shadow">
                         <Routes>
                             <Route path="/dogs" element={<DogManagement />} />
                             <Route path="/crosses" element={<CrossManagement />} />
                             <Route path="/judges" element={<JudgeManagement />} />
                             <Route path="/scratches" element={<ScratchManagement />} />
                             <Route path="/" element={<HuntManagement />} />
-                            <Route path="/create-hunt" element={<HuntCreationForm />}/>
+                            <Route path="/create-hunt" element={<HuntCreationForm />} />
                             <Route path="/edit-hunt" element={<EditHuntInfo />} />
                             <Route path="/start-time" element={<SetStartTime />} />
                             <Route path="/report" element={<SampleReportPage />} />
                         </Routes>
-                    </Container>
+                    </div>
                 </main>
             </div>
         </Router>
@@ -69,4 +105,3 @@ function App() {
 }
 
 export default App;
-
